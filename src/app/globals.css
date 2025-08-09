@@ -1,0 +1,227 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Primary colors */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+
+  /* Secondary colors */
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  /* Accent colors */
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  /* Semantic colors */
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  /* UI elements */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Medical section colors */
+  --color-medical-primary: var(--medical-primary);
+  --color-medical-warning: var(--medical-warning);
+  --color-medical-action: var(--medical-action);
+  --color-medical-prevention: var(--medical-prevention);
+  --color-medical-urgent: var(--medical-urgent);
+
+  /* Card colors */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  /* Charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+
+  /* Blue Theme Variables */
+  --background: oklch(0.99 0.005 240);
+  --foreground: oklch(0.15 0.05 230);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.05 230);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.05 230);
+
+  /* Primary Blue Palette */
+  --primary: oklch(0.45 0.12 240); /* Blue-600 */
+  --primary-foreground: oklch(0.98 0.01 240);
+  --primary-hover: oklch(0.4 0.15 240); /* Blue-700 */
+
+  /* Secondary Blues */
+  --secondary: oklch(0.95 0.02 240); /* Blue-50 */
+  --secondary-foreground: oklch(0.15 0.08 235); /* Blue-900 */
+  --muted: oklch(0.92 0.03 240); /* Blue-100 */
+  --muted-foreground: oklch(0.45 0.06 235); /* Blue-600 */
+
+  /* Accent Colors */
+  --accent: oklch(0.88 0.04 240); /* Blue-200 */
+  --accent-foreground: oklch(0.2 0.08 235); /* Blue-800 */
+
+  /* Semantic Colors within Blue Theme */
+  --success: oklch(0.55 0.08 160); /* Teal-600 */
+  --success-foreground: oklch(0.95 0.02 160);
+  --warning: oklch(0.65 0.12 60); /* Amber-500 */
+  --warning-foreground: oklch(0.95 0.02 60);
+  --destructive: oklch(0.55 0.18 20); /* Red-600 */
+  --destructive-foreground: oklch(0.95 0.02 20);
+
+  /* UI Elements */
+  --border: oklch(0.88 0.04 240); /* Blue-200 */
+  --input: oklch(0.92 0.03 240); /* Blue-100 */
+  --ring: oklch(0.45 0.12 240); /* Blue-600 */
+
+  /* Medical Section Colors */
+  --medical-primary: oklch(0.45 0.12 240); /* Possible Cause - Blue */
+  --medical-warning: oklch(0.65 0.12 60); /* Likely Triggers - Amber */
+  --medical-action: oklch(0.55 0.08 160); /* What You Can Do Now - Teal */
+  --medical-prevention: oklch(0.6 0.15 300); /* Prevention Tips - Purple */
+  --medical-urgent: oklch(0.55 0.18 20); /* See a Doctor If - Red */
+
+  /* Charts */
+  --chart-1: oklch(0.45 0.12 240);
+  --chart-2: oklch(0.55 0.08 160);
+  --chart-3: oklch(0.65 0.12 60);
+  --chart-4: oklch(0.6 0.15 300);
+  --chart-5: oklch(0.55 0.18 20);
+
+  /* Sidebar */
+  --sidebar: oklch(0.98 0.01 240);
+  --sidebar-foreground: oklch(0.15 0.05 230);
+  --sidebar-primary: oklch(0.45 0.12 240);
+  --sidebar-primary-foreground: oklch(0.98 0.01 240);
+  --sidebar-accent: oklch(0.92 0.03 240);
+  --sidebar-accent-foreground: oklch(0.15 0.08 235);
+  --sidebar-border: oklch(0.88 0.04 240);
+  --sidebar-ring: oklch(0.45 0.12 240);
+}
+
+.dark {
+  --background: oklch(0.12 0.05 230);
+  --foreground: oklch(0.95 0.02 240);
+  --card: oklch(0.15 0.05 235);
+  --card-foreground: oklch(0.95 0.02 240);
+  --popover: oklch(0.15 0.05 235);
+  --popover-foreground: oklch(0.95 0.02 240);
+
+  --primary: oklch(0.65 0.15 240); /* Lighter blue for dark mode */
+  --primary-foreground: oklch(0.1 0.05 230);
+  --primary-hover: oklch(0.7 0.18 240);
+
+  --secondary: oklch(0.2 0.06 235);
+  --secondary-foreground: oklch(0.9 0.03 240);
+  --muted: oklch(0.25 0.06 235);
+  --muted-foreground: oklch(0.7 0.06 240);
+
+  --accent: oklch(0.3 0.08 235);
+  --accent-foreground: oklch(0.85 0.04 240);
+
+  --success: oklch(0.65 0.1 160);
+  --success-foreground: oklch(0.15 0.05 160);
+  --warning: oklch(0.7 0.15 60);
+  --warning-foreground: oklch(0.15 0.05 60);
+  --destructive: oklch(0.65 0.2 20);
+  --destructive-foreground: oklch(0.15 0.05 20);
+
+  --border: oklch(0.25 0.06 235);
+  --input: oklch(0.2 0.06 235);
+  --ring: oklch(0.65 0.15 240);
+
+  --medical-primary: oklch(0.65 0.15 240);
+  --medical-warning: oklch(0.7 0.15 60);
+  --medical-action: oklch(0.65 0.1 160);
+  --medical-prevention: oklch(0.7 0.18 300);
+  --medical-urgent: oklch(0.65 0.2 20);
+
+  --chart-1: oklch(0.65 0.15 240);
+  --chart-2: oklch(0.65 0.1 160);
+  --chart-3: oklch(0.7 0.15 60);
+  --chart-4: oklch(0.7 0.18 300);
+  --chart-5: oklch(0.65 0.2 20);
+
+  --sidebar: oklch(0.15 0.05 235);
+  --sidebar-foreground: oklch(0.95 0.02 240);
+  --sidebar-primary: oklch(0.65 0.15 240);
+  --sidebar-primary-foreground: oklch(0.1 0.05 230);
+  --sidebar-accent: oklch(0.25 0.06 235);
+  --sidebar-accent-foreground: oklch(0.9 0.03 240);
+  --sidebar-border: oklch(0.25 0.06 235);
+  --sidebar-ring: oklch(0.65 0.15 240);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+  }
+}

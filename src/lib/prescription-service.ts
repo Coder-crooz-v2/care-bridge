@@ -15,8 +15,18 @@ export class PrescriptionService {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
+
+        // If it's a connection error to Python API, fall back to mock
+        if (
+          response.status === 503 ||
+          (errorData?.error && errorData.error.includes("unable to connect"))
+        ) {
+          console.warn("Python API unavailable, falling back to mock service");
+          return this.mockUploadPrescription(file);
+        }
+
         throw new Error(
-          errorData?.message || `HTTP error! status: ${response.status}`
+          errorData?.error || `HTTP error! status: ${response.status}`
         );
       }
 
@@ -28,6 +38,17 @@ export class PrescriptionService {
       };
     } catch (error) {
       console.error("Error uploading prescription:", error);
+
+      // If network error or connection refused, try mock service
+      if (
+        error instanceof Error &&
+        (error.message.includes("fetch") ||
+          error.message.includes("NetworkError"))
+      ) {
+        console.warn("Network error detected, falling back to mock service");
+        return this.mockUploadPrescription(file);
+      }
+
       return {
         success: false,
         error:
@@ -36,7 +57,7 @@ export class PrescriptionService {
     }
   }
 
-  // Mock function for demo purposes - remove this when you have a real API
+  // Mock function for demo purposes when Python API is unavailable
   static async mockUploadPrescription(file: File): Promise<UploadResponse> {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -50,7 +71,10 @@ export class PrescriptionService {
           frequency: "3 times daily",
           duration: "5 days",
           instructions: "take after meals",
-          notes: "Dosage details not clearly readable from prescription",
+          notes: "Mock data - Python API not available",
+          confidence: 0.85,
+          category: "painkiller",
+          generic_name: "Acetaminophen",
         },
         {
           name: "Ibuprofen",
@@ -59,25 +83,18 @@ export class PrescriptionService {
           duration: "3 days",
           instructions: "take with food",
           notes: "Monitor for any gastrointestinal discomfort",
-        },
-        {
-          name: "Amoxicillin",
-          dosage: "500mg",
-          frequency: "2 times daily",
-          duration: "7 days",
-          instructions: "take on empty stomach",
-        },
-        {
-          name: "Vitamin D3",
-          dosage: "60000 IU",
-          frequency: "once weekly",
-          duration: "8 weeks",
-          instructions: "take with milk or after meals",
+          confidence: 0.92,
+          category: "anti-inflammatory",
+          side_effects: ["nausea", "stomach upset"],
+          warnings: ["Do not exceed recommended dose"],
         },
       ],
-      total_medicines: 4,
+      total_medicines: 2,
       disclaimer:
-        "This prescription analysis is generated using AI and OCR technology. Please verify all medicine details with your healthcare provider before taking any medication. This tool is for informational purposes only and should not replace professional medical advice.",
+        "⚠️ DEMO MODE: This is mock data because the Python ML API is not available. Please start the Python server for real prescription processing.",
+      doctor_name: "Dr. Demo",
+      confidence_score: 0.88,
+      processing_time: 3000,
     };
 
     return {

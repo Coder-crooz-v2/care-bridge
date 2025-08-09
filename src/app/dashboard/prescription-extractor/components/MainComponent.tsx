@@ -3,14 +3,15 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, RefreshCw, Stethoscope, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 import FileUploadZone from "./FileUploadZone";
 import ProcessingSteps from "./ProcessingSteps";
 import PrescriptionResults from "./PrescriptionResults";
+import ErrorDisplay from "./ErrorDisplay";
 import { PrescriptionService } from "@/lib/prescription-service";
 import { PrescriptionData } from "@/types/prescription";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type AppState = "upload" | "processing" | "results" | "error";
 
@@ -24,14 +25,14 @@ const MainComponent = () => {
     useState<PrescriptionData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Simulate processing steps
+  // Simulate processing steps with more realistic timing for ML processing
   useEffect(() => {
     if (currentState === "processing") {
       const steps = [
-        { step: 1, duration: 800, progress: 25 },
-        { step: 2, duration: 1000, progress: 50 },
-        { step: 3, duration: 1200, progress: 75 },
-        { step: 4, duration: 500, progress: 100 },
+        { step: 1, duration: 500, progress: 15 }, // Upload & preprocessing
+        { step: 2, duration: 2000, progress: 45 }, // OCR extraction
+        { step: 3, duration: 3000, progress: 85 }, // AI analysis
+        { step: 4, duration: 800, progress: 100 }, // Validation & formatting
       ];
 
       let timeouts: NodeJS.Timeout[] = [];
@@ -73,8 +74,8 @@ const MainComponent = () => {
     setError(null);
 
     try {
-      // Using mock service for demo - replace with PrescriptionService.uploadPrescription(selectedFile) for real API
-      const response = await PrescriptionService.mockUploadPrescription(
+      // Use real API service
+      const response = await PrescriptionService.uploadPrescription(
         selectedFile
       );
 
@@ -115,7 +116,7 @@ const MainComponent = () => {
   };
 
   return (
-    <div className="flex flex-col h-full w-full mt-16 bg-background">
+    <div className="flex flex-col h-[calc(100vh-4rem)] w-full mt-16 bg-background">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -151,7 +152,7 @@ const MainComponent = () => {
       </motion.div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
+      <ScrollArea className="flex-1 h-screen overflow-y-auto">
         <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-6">
           <AnimatePresence mode="wait">
             {currentState === "upload" && (
@@ -231,40 +232,18 @@ const MainComponent = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3 }}
-                className="max-w-2xl mx-auto"
               >
-                <Card className="border-destructive/20 bg-destructive/5">
-                  <CardHeader>
-                    <CardTitle className="text-destructive flex items-center gap-2">
-                      <AlertTriangle className="h-5 w-5" />
-                      Processing Failed
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-sm text-muted-foreground">
-                      {error ||
-                        "An unexpected error occurred while processing your prescription."}
-                    </p>
-
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={handleRetry}
-                        className="flex items-center gap-2"
-                      >
-                        <RefreshCw className="h-4 w-4" />
-                        Try Again
-                      </Button>
-                      <Button variant="outline" onClick={handleStartOver}>
-                        Upload Different File
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <ErrorDisplay
+                  error={error || "An unexpected error occurred"}
+                  onRetry={handleRetry}
+                  onStartOver={handleStartOver}
+                  fileName={selectedFile?.name}
+                />
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-      </div>
+      </ScrollArea>
     </div>
   );
 };

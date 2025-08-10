@@ -323,7 +323,7 @@ const MainComponent = () => {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] w-full mt-10 bg-background">
+    <div className="flex flex-col h-[calc(100vh-4rem)] w-full bg-background">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}

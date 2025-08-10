@@ -32,8 +32,8 @@ import { toast } from "sonner";
 interface PeriodEntry {
   id?: string;
   user_id: string;
-  start_date: string;
-  end_date?: string;
+  logged_date: string;
+  cycle_day?: number;
   flow_intensity: "light" | "moderate" | "heavy";
   symptoms: string[];
   notes?: string;
@@ -100,8 +100,14 @@ const PeriodTracker: React.FC = () => {
         HealthMonitoringService.getPeriodStats(user.id),
       ]);
 
+      console.log("Periods response:", periodsResponse);
+      console.log("Stats response:", statsResponse);
+
       if (periodsResponse.success && periodsResponse.data) {
         setPeriods(periodsResponse.data);
+        console.log("Loaded periods:", periodsResponse.data);
+      } else {
+        console.error("Failed to load periods:", periodsResponse.error);
       }
 
       if (statsResponse.success && statsResponse.data) {
@@ -121,7 +127,8 @@ const PeriodTracker: React.FC = () => {
 
     const periodEntry: PeriodEntry = {
       user_id: user.id,
-      start_date: selectedDate.toISOString().split("T")[0],
+      logged_date: selectedDate.toISOString().split("T")[0],
+      cycle_day: 1, // Default cycle day, could be made configurable
       flow_intensity: newPeriod.flow_intensity,
       symptoms: newPeriod.symptoms || [],
       notes: newPeriod.notes,
@@ -133,7 +140,14 @@ const PeriodTracker: React.FC = () => {
       );
 
       if (response.success) {
-        toast.success("Period entry added successfully");
+        // Check if this date already had an entry (existing data means it was updated)
+        const existingEntry = periods.find(
+          (p) => p.logged_date === selectedDate.toISOString().split("T")[0]
+        );
+        const message = existingEntry
+          ? "Period entry updated successfully"
+          : "Period entry added successfully";
+        toast.success(message);
         setIsAddingPeriod(false);
         setNewPeriod({
           flow_intensity: "moderate",
@@ -160,18 +174,14 @@ const PeriodTracker: React.FC = () => {
 
   const getPeriodDates = () => {
     const dates = new Set<string>();
+    console.log("Periods for calendar:", periods);
     periods.forEach((period) => {
-      const start = new Date(period.start_date);
-      const end = period.end_date ? new Date(period.end_date) : start;
-
-      for (
-        let date = new Date(start);
-        date <= end;
-        date.setDate(date.getDate() + 1)
-      ) {
-        dates.add(date.toISOString().split("T")[0]);
-      }
+      const start = new Date(period.logged_date);
+      const dateString = start.toISOString().split("T")[0];
+      console.log("Adding period date:", dateString, "from period:", period);
+      dates.add(dateString);
     });
+    console.log("Period dates set:", Array.from(dates));
     return dates;
   };
 
@@ -209,7 +219,7 @@ const PeriodTracker: React.FC = () => {
     return (
       <div className="text-center py-8">
         <p className="text-muted-foreground">
-          Please log in to access period tracking.
+          Please log in to access menstrual tracking.
         </p>
       </div>
     );
@@ -240,7 +250,7 @@ const PeriodTracker: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <Droplets className="h-5 w-5 text-pink-600" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Period Length</p>
+                  <p className="text-sm text-muted-foreground">Cycle Length</p>
                   <p className="text-2xl font-bold">
                     {stats.average_period_length}
                   </p>
@@ -289,20 +299,20 @@ const PeriodTracker: React.FC = () => {
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center space-x-2">
                 <CalendarIcon className="h-5 w-5" />
-                <span>Period Calendar</span>
+                <span>Menstrual Calendar</span>
               </CardTitle>
               <Dialog open={isAddingPeriod} onOpenChange={setIsAddingPeriod}>
                 <DialogTrigger asChild>
                   <Button size="sm">
                     <Plus className="h-4 w-4 mr-2" />
-                    Add Period
+                    Add Menstrual timeline
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Add Period Entry</DialogTitle>
+                    <DialogTitle>Add Menstrual Entry</DialogTitle>
                     <DialogDescription>
-                      Record your period details for this date
+                      Record your mentstruation details for this date
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
@@ -439,13 +449,7 @@ const PeriodTracker: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="font-medium">
-                          {new Date(period.start_date).toLocaleDateString()}
-                          {period.end_date && (
-                            <span>
-                              {" "}
-                              - {new Date(period.end_date).toLocaleDateString()}
-                            </span>
-                          )}
+                          {new Date(period.logged_date).toLocaleDateString()}
                         </p>
                         <Badge className={flowColors[period.flow_intensity]}>
                           {period.flow_intensity} flow

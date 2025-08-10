@@ -2,22 +2,14 @@
 
 import * as React from "react";
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
   StethoscopeIcon,
   Heart,
+  Activity,
+  Pill,
+  Building2,
+  BookOpen,
 } from "lucide-react";
 
-import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
 import { NavChatHistory } from "@/components/nav-chat-history";
@@ -28,10 +20,16 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store/useAuth";
 import { User } from "@supabase/supabase-js";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 // This is sample data.
 const getData = (userData: User | null) => ({
@@ -46,99 +44,25 @@ const getData = (userData: User | null) => ({
       logo: StethoscopeIcon,
       plan: "Healthcare AI",
     },
-    {
-      name: "Health Analytics",
-      logo: AudioWaveform,
-      plan: "Pro",
-    },
-    {
-      name: "Wellness Platform",
-      logo: Command,
-      plan: "Enterprise",
-    },
   ],
-  navMain: [
+  healthServices: [
     {
-      title: "AI Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Health Assistant",
-          url: "#",
-        },
-        {
-          title: "Symptom Checker",
-          url: "#",
-        },
-        {
-          title: "Wellness Coach",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "User Guide",
-          url: "#",
-        },
-        {
-          title: "Medical Disclaimer",
-          url: "#",
-        },
-        {
-          title: "Privacy Policy",
-          url: "#",
-        },
-        {
-          title: "FAQ",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Profile",
-          url: "#",
-        },
-        {
-          title: "Preferences",
-          url: "#",
-        },
-        {
-          title: "Privacy",
-          url: "#",
-        },
-        {
-          title: "Support",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Health Monitoring",
+      title: "Health Monitoring",
       url: "/dashboard/health-monitoring",
       icon: Heart,
+      description: "Track vitals and health metrics",
     },
     {
-      name: "Symptom Tracking",
-      url: "#",
-      icon: PieChart,
+      title: "Health Blogs",
+      url: "/dashboard/blogs",
+      icon: BookOpen,
+      description: "Health articles and wellness tips",
     },
     {
-      name: "Medication Reminders",
-      url: "#",
-      icon: Map,
+      title: "Nearby Services",
+      url: "/dashboard/nearby-services",
+      icon: Building2,
+      description: "Find nearby clinics and pharmacies",
     },
   ],
 });
@@ -188,8 +112,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavChatHistory activeChatId={activeChatId} />
         <NavPrescriptionHistory activePrescriptionId={activePrescriptionId} />
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+
+        {/* Health Services Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Health Services</SidebarGroupLabel>
+          <SidebarMenu>
+            {data.healthServices.map((service) => (
+              <SidebarMenuItem key={service.title}>
+                <SidebarMenuButton asChild tooltip={service.description}>
+                  <Link href={service.url}>
+                    <service.icon className="h-4 w-4" />
+                    <span>{service.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

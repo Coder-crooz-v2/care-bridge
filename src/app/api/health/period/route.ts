@@ -65,9 +65,13 @@ export async function POST(request: Request) {
       logged_date: body.logged_date || new Date().toISOString().split("T")[0],
     };
 
+    // Use upsert to handle duplicate entries (update if exists, insert if not)
     const { data: period, error } = await supabase
       .from("period_tracking")
-      .insert([periodData])
+      .upsert(periodData, {
+        onConflict: "user_id,logged_date",
+        ignoreDuplicates: false,
+      })
       .select()
       .single();
 

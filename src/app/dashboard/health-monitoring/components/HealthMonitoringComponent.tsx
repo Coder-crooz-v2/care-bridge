@@ -152,10 +152,9 @@ const HealthMonitoringComponent = () => {
 
           // Show alert if needs attention
           if (data.needs_attention && !data.is_attended) {
-            toast.error("Health Alert", {
-              description:
-                "Your vitals indicate you need attention. Consider seeking medical help.",
-            });
+            toast.error(
+              "Health Alert: Your vitals indicate you need attention. Consider seeking medical help."
+            );
           }
         }
       );
@@ -432,7 +431,7 @@ const HealthMonitoringComponent = () => {
           <TabsTrigger value="shared">Shared Health Data</TabsTrigger>
           <TabsTrigger value="share">Share My Data</TabsTrigger>
           {healthProfile?.is_female && (
-            <TabsTrigger value="period">Period Tracker</TabsTrigger>
+            <TabsTrigger value="period">Menstruation Tracker</TabsTrigger>
           )}
         </TabsList>
 

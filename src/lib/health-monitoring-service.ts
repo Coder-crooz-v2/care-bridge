@@ -497,18 +497,19 @@ export class HealthMonitoringService {
     error?: string;
   }> {
     try {
-      const { data, error } = await supabase
-        .from("period_tracking")
-        .select("*")
-        .eq("user_id", userId)
-        .order("start_date", { ascending: false })
-        .limit(50);
+      const response = await fetch(`/api/health/period?user_id=${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-      if (error) {
-        throw error;
+      if (!response.ok) {
+        throw new Error("Failed to fetch period history");
       }
 
-      return { success: true, data };
+      const result = await response.json();
+      return { success: true, data: result.data };
     } catch (error) {
       return {
         success: false,

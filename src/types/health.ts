@@ -118,8 +118,8 @@ export interface HealthSharingPermission {
 export interface PeriodEntry {
   id?: string;
   user_id: string;
-  start_date: string;
-  end_date?: string;
+  logged_date: string;
+  cycle_day?: number;
   flow_intensity: "light" | "moderate" | "heavy";
   symptoms: string[];
   notes?: string;

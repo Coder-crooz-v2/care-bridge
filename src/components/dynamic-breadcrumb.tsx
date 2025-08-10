@@ -23,19 +23,26 @@ import { Chat } from "@/types/chat";
 import { toast } from "sonner";
 
 export function DynamicBreadcrumb() {
+  const [mounted, setMounted] = useState(false);
   const [chats, setChats] = useState<Chat[]>([]);
   const [currentChat, setCurrentChat] = useState<Chat | null>(null);
   const [loading, setLoading] = useState(true);
   const { user } = useAuthStore();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const chatId = searchParams.get("id");
+  const [chatId, setChatId] = useState<string | null>(null);
+
+  // Handle hydration
+  useEffect(() => {
+    setMounted(true);
+    setChatId(searchParams.get("id"));
+  }, [searchParams]);
 
   useEffect(() => {
-    if (user) {
+    if (mounted && user) {
       loadChats();
     }
-  }, [user]);
+  }, [user, mounted]);
 
   useEffect(() => {
     if (chatId && chats.length > 0) {

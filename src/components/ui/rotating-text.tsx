@@ -10,7 +10,7 @@ import {
   motion,
   AnimatePresence,
   Transition,
-  type VariantLabels, 
+  type VariantLabels,
   type animationControls,
   type TargetAndTransition,
   LegacyAnimationControls,
@@ -35,7 +35,11 @@ export interface RotatingTextProps
   texts: string[];
   transition?: Transition;
   initial?: boolean | TargetAndTransition | VariantLabels;
-  animate?: boolean | TargetAndTransition | VariantLabels | typeof animationControls;
+  animate?:
+    | boolean
+    | TargetAndTransition
+    | VariantLabels
+    | typeof animationControls;
   exit?: TargetAndTransition | VariantLabels;
   animatePresenceMode?: "sync" | "wait";
   animatePresenceInitial?: boolean;
@@ -126,7 +130,11 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
           return Math.abs(center - index) * staggerDuration;
         }
         if (staggerFrom === "random") {
-          const randomIndex = Math.floor(Math.random() * total);
+          // Use a stable random index based on the component instance to prevent hydration mismatch
+          const randomIndex = React.useMemo(
+            () => Math.floor(Math.random() * total),
+            [total]
+          );
           return Math.abs(randomIndex - index) * staggerDuration;
         }
         return Math.abs((staggerFrom as number) - index) * staggerDuration;

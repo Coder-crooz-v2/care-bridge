@@ -20,6 +20,7 @@ import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
 import { NavChatHistory } from "@/components/nav-chat-history";
+import { NavPrescriptionHistory } from "@/components/nav-prescription-history";
 import {
   Sidebar,
   SidebarContent,
@@ -144,8 +145,39 @@ const getData = (userData: User | null) => ({
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuthStore();
   const data = React.useMemo(() => getData(user), [user]);
+  const [mounted, setMounted] = React.useState(false);
   const searchParams = useSearchParams();
-  const activeChatId = searchParams.get("id");
+
+  const [activeChatId, setActiveChatId] = React.useState<string | undefined>();
+  const [activePrescriptionId, setActivePrescriptionId] = React.useState<
+    string | undefined
+  >();
+
+  // Handle hydration and searchParams
+  React.useEffect(() => {
+    setMounted(true);
+    setActiveChatId(searchParams.get("id") || undefined);
+    setActivePrescriptionId(searchParams.get("id") || undefined);
+  }, [searchParams]);
+
+  if (!mounted) {
+    return (
+      <Sidebar collapsible="icon" {...props}>
+        <SidebarHeader>
+          <TeamSwitcher teams={data.teams} />
+        </SidebarHeader>
+        <SidebarContent>
+          <div className="p-4 text-center text-muted-foreground text-sm">
+            Loading...
+          </div>
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser user={data.user} />
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+    );
+  }
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -153,7 +185,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavChatHistory activeChatId={activeChatId || undefined} />
+        <NavChatHistory activeChatId={activeChatId} />
+        <NavPrescriptionHistory activePrescriptionId={activePrescriptionId} />
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>

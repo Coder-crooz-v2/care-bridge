@@ -11,6 +11,23 @@ export interface MedicineDetail {
   category?: string; // Medicine category (antibiotic, painkiller, etc.)
   side_effects?: string[]; // Common side effects
   warnings?: string[]; // Important warnings
+  // New fields for enhanced medicine information
+  purpose?: string; // Why this medicine is prescribed
+  avoid_groups?: string[]; // Groups of people who should avoid this medicine
+  interactions?: string[]; // Drug interactions
+  precautions?: string[]; // Precautions to take
+  contraindications?: string[]; // When not to use this medicine
+}
+
+export interface ReminderSettings {
+  medicineId: string;
+  medicineName: string;
+  isActive: boolean;
+  reminderDates: Date[];
+  userEmail?: string;
+  frequency: string;
+  dosage: string;
+  instructions: string;
 }
 
 export interface PrescriptionData {
@@ -23,6 +40,7 @@ export interface PrescriptionData {
   pharmacy_name?: string; // Pharmacy name if mentioned
   confidence_score?: number; // Overall extraction confidence
   processing_time?: number; // Time taken to process
+  image_url?: string; // URL of the stored prescription image
 }
 
 export interface UploadResponse {

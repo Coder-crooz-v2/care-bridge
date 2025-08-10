@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,6 +8,19 @@ export async function POST(request: NextRequest) {
 
     if (!file) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    // Get authenticated user
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
     }
 
     // Validate file type
@@ -25,6 +39,55 @@ export async function POST(request: NextRequest) {
         { error: "File too large. Maximum size is 10MB." },
         { status: 400 }
       );
+    }
+
+    // Upload image to Supabase Storage using server-side client
+    let imageUrl: string | undefined = undefined;
+
+    try {
+      // Generate a unique filename
+      const fileExtension = file.name.split(".").pop();
+      const fileName = `${user.id}/${Date.now()}-${Math.random()
+        .toString(36)
+        .substring(2)}.${fileExtension}`;
+
+      console.log(
+        `Attempting to upload file: ${fileName} to bucket: prescription-images`
+      );
+
+      // Upload to Supabase Storage using server-side client
+      const { data, error } = await supabase.storage
+        .from("prescription-images")
+        .upload(fileName, file, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (error) {
+        console.error("Supabase storage error:", error);
+        console.error("Error details:", {
+          message: error.message,
+          statusCode: (error as any).statusCode,
+          error: (error as any).error,
+        });
+
+        // Storage failed - don't set imageUrl
+        console.warn("Image upload failed - no image will be stored.");
+      } else {
+        console.log("Upload successful:", data);
+
+        // Get public URL
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from("prescription-images").getPublicUrl(fileName);
+
+        console.log("Generated public URL:", publicUrl);
+        imageUrl = publicUrl;
+      }
+    } catch (uploadError) {
+      console.warn("Image upload failed:", uploadError);
+      console.warn("Proceeding without storing image.");
+      // imageUrl remains undefined
     }
 
     // Create FormData to send to Python API
@@ -64,6 +127,7 @@ export async function POST(request: NextRequest) {
       pharmacy_name: result.pharmacy_name,
       confidence_score: result.confidence_score,
       processing_time: result.processing_time,
+      image_url: imageUrl, // Include the stored image URL (if successful)
     };
 
     return NextResponse.json(transformedData);

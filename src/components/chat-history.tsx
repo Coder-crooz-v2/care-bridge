@@ -38,23 +38,29 @@ interface ChatHistoryProps {
 
 export function ChatHistory({ activeChatId }: ChatHistoryProps) {
   const { user } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
   const [chats, setChats] = useState<Chat[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
 
+  // Handle hydration
   useEffect(() => {
-    if (user) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && user) {
       loadChats();
     }
-  }, [user]);
+  }, [user, mounted]);
 
   // Refresh chats when active chat changes (new chat created)
   useEffect(() => {
-    if (user) {
+    if (mounted && user) {
       loadChats();
     }
-  }, [activeChatId]);
+  }, [activeChatId, mounted, user]);
 
   const loadChats = async () => {
     if (!user) return;

@@ -175,7 +175,9 @@ export default function ChatComponent({
     }
 
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id:
+        Math.random().toString(36).substring(2) +
+        Math.random().toString(36).substring(2),
       content: input,
       sender: "user",
       timestamp: new Date(),
@@ -201,7 +203,10 @@ export default function ChatComponent({
     }
 
     // Create initial AI message with empty content for streaming
-    const aiMessageId = (Date.now() + 1).toString();
+    const aiMessageId =
+      Math.random().toString(36).substring(2) +
+      Math.random().toString(36).substring(2) +
+      "1";
     const initialAiMessage: Message = {
       id: aiMessageId,
       content: "",

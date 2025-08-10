@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import { DynamicBreadcrumb } from "@/components/dynamic-breadcrumb";
 import {
@@ -13,7 +14,6 @@ import { Separator } from "@radix-ui/react-separator";
 import { redirect } from "next/navigation";
 import React, { useEffect } from "react";
 import { toast } from "sonner";
-import { set } from "zod";
 export default function DashboardLayout({
   children,
 }: {
@@ -43,7 +43,11 @@ export default function DashboardLayout({
     <SidebarProvider>
       <div className="flex min-h-screen flex-col w-full">
         <div className="flex flex-1 w-full">
-          <AppSidebar />
+          <Suspense
+            fallback={<div className="w-64 bg-muted/30 animate-pulse" />}
+          >
+            <AppSidebar />
+          </Suspense>
           <SidebarInset className="bg-background flex flex-col relative">
             <header className="flex absolute w-full h-14 sm:h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 px-2 sm:px-4 bg-transparent backdrop-blur-sm">
               <div className="flex items-center gap-2">
@@ -52,7 +56,13 @@ export default function DashboardLayout({
                   orientation="vertical"
                   className="mr-2 data-[orientation=vertical]:h-4"
                 />
-                <DynamicBreadcrumb />
+                <Suspense
+                  fallback={
+                    <div className="h-4 w-32 bg-muted animate-pulse rounded" />
+                  }
+                >
+                  <DynamicBreadcrumb />
+                </Suspense>
               </div>
             </header>
             <main className="flex-1 flex overflow-hidden w-full">

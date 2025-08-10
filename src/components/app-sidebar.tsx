@@ -13,6 +13,7 @@ import {
   Settings2,
   SquareTerminal,
   StethoscopeIcon,
+  Heart,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -126,8 +127,8 @@ const getData = (userData: User | null) => ({
   projects: [
     {
       name: "Health Monitoring",
-      url: "#",
-      icon: Frame,
+      url: "/dashboard/health-monitoring",
+      icon: Heart,
     },
     {
       name: "Symptom Tracking",

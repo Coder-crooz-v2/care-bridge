@@ -67,7 +67,9 @@ export async function POST(request: NextRequest) {
         console.error("Supabase storage error:", error);
         console.error("Error details:", {
           message: error.message,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           statusCode: (error as any).statusCode,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           error: (error as any).error,
         });
 

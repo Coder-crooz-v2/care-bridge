@@ -34,6 +34,7 @@ export async function POST(request: Request) {
     });
 
     const chatCompletion = await groq.chat.completions.create({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       messages: messages as any,
       model: "meta-llama/llama-4-scout-17b-16e-instruct",
       temperature: 1,

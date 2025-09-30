@@ -31,17 +31,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/store/useAuth";
-import { ChatService } from "@/lib/chat-service";
 import { Chat } from "@/types/chat";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import axios from "axios";
+import { useChatList } from "@/store/useChatList";
 
 interface NavChatHistoryProps {
   activeChatId?: string;
 }
 
 export function NavChatHistory({ activeChatId }: NavChatHistoryProps) {
-  const [chats, setChats] = useState<Chat[]>([]);
+  const { chats, setChats } = useChatList();
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(true);
   const { user } = useAuthStore();
@@ -58,8 +59,8 @@ export function NavChatHistory({ activeChatId }: NavChatHistoryProps) {
 
     try {
       setLoading(true);
-      const userChats = await ChatService.getUserChats(user.id);
-      setChats(userChats);
+      const userChats = await axios.get(`/api/chats?user_id=${user.id}`);
+      setChats(userChats.data);
     } catch (error) {
       console.error("Error loading chats:", error);
       toast.error("Failed to load chat history");
@@ -79,8 +80,8 @@ export function NavChatHistory({ activeChatId }: NavChatHistoryProps) {
   const handleDeleteChat = async (chatId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      await ChatService.deleteChat(chatId);
-      setChats((prev) => prev.filter((chat) => chat.id !== chatId));
+      await axios.delete(`/api/chats`, { data: { id: chatId } });
+      setChats(chats.filter((chat: Chat) => chat.id !== chatId));
       toast.success("Chat deleted successfully");
 
       // If the deleted chat was active, redirect to new chat
@@ -91,22 +92,6 @@ export function NavChatHistory({ activeChatId }: NavChatHistoryProps) {
       console.error("Error deleting chat:", error);
       toast.error("Failed to delete chat");
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor(
-      (now.getTime() - date.getTime()) / (1000 * 60 * 60)
-    );
-    const diffDays = Math.floor(diffInHours / 24) + 1;
-
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    if (diffDays === 1) return "Today";
-    if (diffDays === 2) return "Yesterday";
-    if (diffDays <= 7) return `${diffDays - 1} days ago`;
-    return date.toLocaleDateString();
   };
 
   if (!user) return null;
@@ -120,6 +105,13 @@ export function NavChatHistory({ activeChatId }: NavChatHistoryProps) {
           className="group/collapsible"
         >
           <SidebarMenuItem>
+            <SidebarMenuButton
+              className="mb-3 cursor-pointer"
+              onClick={handleNewChat}
+            >
+              <Plus className="h-4 w-4" />
+              <span>New Chat</span>
+            </SidebarMenuButton>
             <CollapsibleTrigger asChild>
               <SidebarMenuButton tooltip="Chat History">
                 <MessageSquare />
@@ -129,14 +121,6 @@ export function NavChatHistory({ activeChatId }: NavChatHistoryProps) {
             </CollapsibleTrigger>
             <CollapsibleContent>
               <SidebarMenuSub>
-                {/* New Chat Button */}
-                <SidebarMenuSubItem>
-                  <SidebarMenuSubButton onClick={handleNewChat}>
-                    <Plus className="h-4 w-4" />
-                    <span>New Chat</span>
-                  </SidebarMenuSubButton>
-                </SidebarMenuSubItem>
-
                 {/* Chat History */}
                 {loading ? (
                   <>

@@ -51,10 +51,7 @@ function ChatInterfaceContent() {
       {currentChatId && <ShareButton chatId={currentChatId} />}
 
       <div className="flex-1 flex">
-        <ChatComponent
-          chatId={chatId || undefined}
-          onChatCreated={handleChatCreated}
-        />
+        <ChatComponent />
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, MessageSquare, Plus } from "lucide-react";
 import { useAuthStore } from "@/store/useAuth";
-import { ChatService } from "@/lib/chat-service";
+// import { ChatService } from "@/lib/chat-service";
 import { Chat } from "@/types/chat";
 import { toast } from "sonner";
 
@@ -58,8 +58,8 @@ export function DynamicBreadcrumb() {
 
     try {
       setLoading(true);
-      const userChats = await ChatService.getUserChats(user.id);
-      setChats(userChats);
+      // const userChats = await ChatService.getUserChats(user.id);
+      // setChats(userChats);
     } catch (error) {
       console.error("Error loading chats:", error);
       toast.error("Failed to load chat history");

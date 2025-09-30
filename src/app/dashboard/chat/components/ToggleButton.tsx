@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Share2, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 interface ShareButtonProps {

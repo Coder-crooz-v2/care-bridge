@@ -50,7 +50,7 @@ The following packages have been installed:
 **Frontend (.env.local)**:
 
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://your-supabase-url
+NEXT_PUBLIC_NEXT_PUBLIC_SUPABASE_URL=https://your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 GROQ_API_KEY=your-groq-api-key
 PYTHON_API_URL=http://127.0.0.1:8000

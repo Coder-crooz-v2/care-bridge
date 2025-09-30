@@ -49,7 +49,7 @@ export default function WelcomeCard({
 
   return (
     <motion.div
-      className="w-full max-w-3xl mx-auto my-4 sm:my-8 px-2 sm:px-0"
+      className="w-full h-[calc(100vh-16.7rem)] max-w-3xl mx-auto my-4 sm:my-8 px-2 sm:px-0"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}

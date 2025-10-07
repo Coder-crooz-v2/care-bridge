@@ -166,8 +166,8 @@ export default function NearbyServicesPage() {
             {clinics.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-4">
-                  <Building2 className="h-5 w-5 text-blue-600" />
-                  <h2 className="text-xl font-semibold text-blue-600">
+                  <Building2 className="h-5 w-5 text-primary" />
+                  <h2 className="text-xl font-semibold text-primary">
                     Clinics
                   </h2>
                 </div>
@@ -187,8 +187,8 @@ export default function NearbyServicesPage() {
             {pharmacies.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-4">
-                  <Pill className="h-5 w-5 text-green-600" />
-                  <h2 className="text-xl font-semibold text-green-600">
+                  <Pill className="h-5 w-5 text-success" />
+                  <h2 className="text-xl font-semibold text-success">
                     Pharmacies
                   </h2>
                 </div>
@@ -258,9 +258,9 @@ function ServiceCard({
             <CardTitle className="text-lg leading-tight">{item.name}</CardTitle>
             <div className="flex items-center gap-2 mt-1">
               {item.type === "clinic" ? (
-                <Building2 className="h-4 w-4 text-blue-600" />
+                <Building2 className="h-4 w-4 text-primary" />
               ) : (
-                <Pill className="h-4 w-4 text-green-600" />
+                <Pill className="h-4 w-4 text-success" />
               )}
               <span className="text-sm text-muted-foreground capitalize">
                 {item.type}
@@ -271,8 +271,8 @@ function ServiceCard({
             variant={item.isOpen ? "default" : "secondary"}
             className={`${
               item.isOpen
-                ? "bg-green-100 text-green-800 hover:bg-green-100"
-                : "bg-red-100 text-red-800 hover:bg-red-100"
+                ? "bg-success text-success-foreground hover:bg-success"
+                : "bg-destructive text-destructive-foreground hover:bg-destructive"
             }`}
           >
             {item.isOpen ? "Open" : "Closed"}

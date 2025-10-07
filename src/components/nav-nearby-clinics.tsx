@@ -103,8 +103,8 @@ export function NavNearbyClinics() {
       {/* Clinics Section */}
       <div className="mb-4">
         <div className="flex items-center gap-2 mb-2 px-2">
-          <Building2 className="h-4 w-4 text-blue-600" />
-          <span className="text-sm font-medium text-blue-600">Clinics</span>
+          <Building2 className="h-4 w-4 text-primary" />
+          <span className="text-sm font-medium text-primary">Clinics</span>
         </div>
         <SidebarMenu>
           {clinics.map((clinic) => (
@@ -118,8 +118,8 @@ export function NavNearbyClinics() {
                     variant={clinic.isOpen ? "default" : "secondary"}
                     className={`text-xs ${
                       clinic.isOpen
-                        ? "bg-green-100 text-green-800 hover:bg-green-100"
-                        : "bg-red-100 text-red-800 hover:bg-red-100"
+                        ? "bg-success/10 text-success hover:bg-success/10"
+                        : "bg-destructive/10 text-destructive hover:bg-destructive/10"
                     }`}
                   >
                     {clinic.isOpen ? "Open" : "Closed"}
@@ -159,8 +159,8 @@ export function NavNearbyClinics() {
       {/* Pharmacies Section */}
       <div>
         <div className="flex items-center gap-2 mb-2 px-2">
-          <Pill className="h-4 w-4 text-green-600" />
-          <span className="text-sm font-medium text-green-600">Pharmacies</span>
+          <Pill className="h-4 w-4 text-success" />
+          <span className="text-sm font-medium text-success">Pharmacies</span>
         </div>
         <SidebarMenu>
           {pharmacies.map((pharmacy) => (
@@ -174,8 +174,8 @@ export function NavNearbyClinics() {
                     variant={pharmacy.isOpen ? "default" : "secondary"}
                     className={`text-xs ${
                       pharmacy.isOpen
-                        ? "bg-green-100 text-green-800 hover:bg-green-100"
-                        : "bg-red-100 text-red-800 hover:bg-red-100"
+                        ? "bg-success/10 text-success hover:bg-success/10"
+                        : "bg-destructive/10 text-destructive hover:bg-destructive/10"
                     }`}
                   >
                     {pharmacy.isOpen ? "Open" : "Closed"}

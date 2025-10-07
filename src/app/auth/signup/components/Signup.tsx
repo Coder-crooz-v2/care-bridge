@@ -86,7 +86,7 @@ export default function SignupPageComponent() {
         initial={{ x: -60, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ type: "spring", duration: 0.8 }}
-        className="w-full md:w-1/2 bg-gradient-to-b from-blue-50 to-white flex flex-col justify-center items-center py-12 px-6"
+        className="w-full md:w-1/2 bg-gradient-to-b from-secondary to-background flex flex-col justify-center items-center py-12 px-6"
       >
         {/* Logo and Company Name */}
         <div className="flex items-center mb-8 absolute top-0 left-0 p-6">
@@ -138,7 +138,7 @@ export default function SignupPageComponent() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="phoneNumber" className="text-blue-800">
+              <Label htmlFor="phoneNumber" className="text-primary">
                 Phone Number
               </Label>
               <Input
@@ -148,12 +148,12 @@ export default function SignupPageComponent() {
                   setFormData({ ...formData, phoneNumber: e.target.value })
                 }
                 placeholder="(123) 456-7890"
-                className="bg-blue-50/50 border-blue-200 text-blue-900 placeholder-blue-400 focus:border-blue-500 focus:ring-blue-500"
+                className="bg-secondary/50 border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
               />
             </div>
             <div className="flex max-sm:flex-col gap-3">
               <div className="grid gap-2">
-                <Label htmlFor="dob" className="text-blue-800">
+                <Label htmlFor="dob" className="text-primary">
                   Date of Birth
                 </Label>
                 <Input
@@ -163,11 +163,11 @@ export default function SignupPageComponent() {
                     setFormData({ ...formData, dob: e.target.value })
                   }
                   placeholder="dd-mm-yyyy"
-                  className="bg-blue-50/50 border-blue-200 text-blue-900 placeholder-blue-400 focus:border-blue-500 focus:ring-blue-500"
+                  className="bg-secondary/50 border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="gender" className="text-blue-800">
+                <Label htmlFor="gender" className="text-primary">
                   Gender
                 </Label>
                 <RadioGroup
@@ -179,19 +179,28 @@ export default function SignupPageComponent() {
                 >
                   <div className="flex items-center gap-1">
                     <RadioGroupItem value="male" id="r1" />
-                    <Label htmlFor="r1" className="text-xs text-gray-700">
+                    <Label
+                      htmlFor="r1"
+                      className="text-xs text-muted-foreground"
+                    >
                       Male
                     </Label>
                   </div>
                   <div className="flex items-center gap-1">
                     <RadioGroupItem value="female" id="r2" />
-                    <Label htmlFor="r2" className="text-xs text-gray-700">
+                    <Label
+                      htmlFor="r2"
+                      className="text-xs text-muted-foreground"
+                    >
                       Female
                     </Label>
                   </div>
                   <div className="flex items-center gap-1">
-                    <RadioGroupItem value="others" id="r3" color="blue" />
-                    <Label htmlFor="r3" className="text-xs text-gray-700">
+                    <RadioGroupItem value="others" id="r3" />
+                    <Label
+                      htmlFor="r3"
+                      className="text-xs text-muted-foreground"
+                    >
                       Others
                     </Label>
                   </div>
@@ -200,12 +209,12 @@ export default function SignupPageComponent() {
             </div>
             <div className="grid gap-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-blue-800">
+                <Label htmlFor="password" className="text-primary">
                   Password
                 </Label>
                 <Link
                   href="/forgot-password"
-                  className="text-xs text-blue-600 hover:text-blue-700 hover:underline"
+                  className="text-xs text-primary hover:underline"
                 >
                   Forgot your password?
                 </Link>
@@ -217,23 +226,23 @@ export default function SignupPageComponent() {
                   setFormData({ ...formData, password: e.target.value })
                 }
                 placeholder="********"
-                className="bg-blue-50/50 border-blue-200 text-blue-900 placeholder-blue-400 focus:border-blue-500 focus:ring-blue-500"
+                className="bg-secondary/50 border-border text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-primary"
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-2">
             <Button
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all"
+              className="w-full font-semibold transition-all"
               disabled={loading}
               onClick={handleSignup}
             >
               {loading ? " Creating Account..." : "Create Account"}
             </Button>
-            <p className="mt-2 text-xs text-center text-blue-700">
+            <p className="mt-2 text-xs text-center text-muted-foreground">
               Already have an account?{" "}
               <Link
                 href="/auth/login"
-                className="text-blue-600 font-medium hover:underline"
+                className="text-primary font-medium hover:underline"
               >
                 Log In
               </Link>
@@ -247,9 +256,9 @@ export default function SignupPageComponent() {
         initial={{ x: 60, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ type: "spring", duration: 0.8, delay: 0.2 }}
-        className="hidden md:flex w-1/2 relative bg-blue-100 items-center justify-center"
+        className="hidden md:flex w-1/2 relative bg-secondary items-center justify-center"
       >
-        <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/60 to-blue-400/40 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-primary/60 to-primary/40 z-10" />
         <Image
           src="https://images.unsplash.com/photo-1546659934-038aab8f3f3b?q=80&w=899&auto=format&fit=crop"
           alt="Healthcare illustration"
@@ -265,9 +274,10 @@ export default function SignupPageComponent() {
           transition={{ delay: 0.7 }}
           className="relative z-20 text-white text-2xl font-semibold text-center px-8"
         >
-          <div className="bg-blue-900/30 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:-translate-y-2 hover:shadow-xl hover:shadow-blue-900 transition-all duration-300">
-            Welcome to <span className="text-blue-200">CareBridge</span>
-            <div className="text-base font-normal mt-2 text-blue-100/90">
+          <div className="bg-primary/30 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:-translate-y-2 hover:shadow-xl hover:shadow-primary transition-all duration-300">
+            Welcome to{" "}
+            <span className="text-primary-foreground">CareBridge</span>
+            <div className="text-base font-normal mt-2 text-primary-foreground/90">
               Bridging you to better health, every day.
             </div>
           </div>

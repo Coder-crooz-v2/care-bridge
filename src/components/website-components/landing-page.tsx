@@ -100,17 +100,17 @@ export default function MedicalAssistantLanding() {
 
   const whyChooseUs = [
     {
-      icon: <Shield className="h-6 w-6 mt-1 text-primary/60" />,
+      icon: <Shield className="h-6 w-6 mt-1 text-blue-300" />,
       title: "HIPAA Compliant & Secure",
       desc: "End-to-end encryption ensures your medical data stays private and secure.",
     },
     {
-      icon: <Users className="h-6 w-6 mt-1 text-primary/60" />,
+      icon: <Users className="h-6 w-6 mt-1 text-blue-300" />,
       title: "Doctor Integration",
       desc: "Seamless connection between patients and healthcare providers with real-time monitoring.",
     },
     {
-      icon: <Clock className="h-6 w-6 mt-1 text-primary/60" />,
+      icon: <Clock className="h-6 w-6 mt-1 text-blue-300" />,
       title: "24/7 Availability",
       desc: "Round-the-clock health monitoring and instant emergency alerts.",
     },
@@ -141,7 +141,7 @@ export default function MedicalAssistantLanding() {
                   </Badge>
                 </motion.div>
                 <motion.h1
-                  className="text-3xl max-sm:text-center md:text-6xl font-bold text-gray-900 leading-tight"
+                  className="text-3xl max-sm:text-center md:text-6xl font-bold text-foreground leading-tight"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.7, delay: 0.2 }}
@@ -174,7 +174,7 @@ export default function MedicalAssistantLanding() {
                   Companion
                 </motion.h1>
                 <motion.p
-                  className="text-lg max-sm:text-center md:text-xl text-gray-600 leading-relaxed"
+                  className="text-lg max-sm:text-center md:text-xl text-muted-foreground leading-relaxed"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.7, delay: 0.4 }}
@@ -216,7 +216,7 @@ export default function MedicalAssistantLanding() {
                     variants={fadeIn}
                   >
                     <motion.div
-                      className="text-lg md:text-2xl font-bold text-blue-600"
+                      className="text-lg md:text-2xl font-bold text-primary"
                       initial={{ opacity: 0, scale: 0.5 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{
@@ -226,7 +226,7 @@ export default function MedicalAssistantLanding() {
                     >
                       {stat.number}
                     </motion.div>
-                    <div className="text-xs md:text-sm text-gray-600">
+                    <div className="text-xs md:text-sm text-muted-foreground">
                       {stat.label}
                     </div>
                   </motion.div>
@@ -248,7 +248,7 @@ export default function MedicalAssistantLanding() {
                 />
               </div>
               <motion.div
-                className="absolute -top-4 max-sm:right-2 -right-4 max-sm:w-44 max-sm:h-44 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70"
+                className="absolute -top-4 max-sm:right-2 -right-4 max-sm:w-44 max-sm:h-44 w-72 h-72 bg-secondary rounded-full mix-blend-multiply filter blur-xl opacity-70"
                 animate={{
                   scale: [1, 1.2, 1],
                   opacity: [0.7, 0.5, 0.7],
@@ -260,7 +260,7 @@ export default function MedicalAssistantLanding() {
                 }}
               ></motion.div>
               <motion.div
-                className="absolute -bottom-8 -left-4 max-sm:w-44 max-sm:h-44 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70"
+                className="absolute -bottom-8 -left-4 max-sm:w-44 max-sm:h-44 w-72 h-72 bg-accent rounded-full mix-blend-multiply filter blur-xl opacity-70"
                 animate={{
                   scale: [1, 1.3, 1],
                   opacity: [0.7, 0.4, 0.7],
@@ -287,10 +287,10 @@ export default function MedicalAssistantLanding() {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
               Comprehensive Healthcare Features
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Three powerful tools working together to provide complete medical
               assistance for patients and healthcare providers.
             </p>
@@ -315,10 +315,10 @@ export default function MedicalAssistantLanding() {
                   },
                 }}
               >
-                <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-blue-100">
+                <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-border">
                   <CardHeader>
                     <motion.div
-                      className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300"
+                      className="w-16 h-16 bg-secondary rounded-xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300"
                       whileHover={{
                         rotate: 360,
                         transition: { duration: 0.6 },
@@ -326,10 +326,10 @@ export default function MedicalAssistantLanding() {
                     >
                       {feature.icon}
                     </motion.div>
-                    <CardTitle className="text-xl text-gray-900">
+                    <CardTitle className="text-xl text-foreground">
                       {feature.title}
                     </CardTitle>
-                    <CardDescription className="text-gray-600">
+                    <CardDescription className="text-muted-foreground">
                       {feature.description}
                     </CardDescription>
                   </CardHeader>
@@ -338,10 +338,10 @@ export default function MedicalAssistantLanding() {
                       {feature.benefits.map((benefit, benefitIndex) => (
                         <li
                           key={benefitIndex}
-                          className="flex items-center text-sm text-gray-600"
+                          className="flex items-center text-sm text-muted-foreground"
                         >
                           <motion.div
-                            className="w-2 h-2 bg-blue-400 rounded-full mr-3"
+                            className="w-2 h-2 bg-accent rounded-full mr-3"
                             initial={{ scale: 0 }}
                             whileInView={{ scale: 1 }}
                             viewport={{ once: true }}
@@ -360,7 +360,7 @@ export default function MedicalAssistantLanding() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+      <section className="py-20 bg-gradient-to-r from-blue-800 to-blue-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -393,7 +393,7 @@ export default function MedicalAssistantLanding() {
                     </motion.div>
                     <div>
                       <h3 className="font-semibold mb-2">{item.title}</h3>
-                      <p className="text-blue-100">{item.desc}</p>
+                      <p className="text-primary-foreground/80">{item.desc}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -417,7 +417,7 @@ export default function MedicalAssistantLanding() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-blue-50">
+      <section className="py-20 bg-secondary">
         <motion.div
           className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8"
           initial={{ opacity: 0, y: 50 }}
@@ -425,10 +425,10 @@ export default function MedicalAssistantLanding() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
             Ready to Transform Your Healthcare Experience?
           </h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-xl text-muted-foreground mb-8">
             Join thousands of users who trust CareBridge for their daily health
             management.
           </p>
@@ -446,10 +446,7 @@ export default function MedicalAssistantLanding() {
               transition={{ duration: 0.5 }}
               whileHover={{ scale: 1.05 }}
             >
-              <Button
-                size="lg"
-                className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3"
-              >
+              <Button size="lg" className="text-lg px-8 py-3">
                 Get Started Today
               </Button>
             </motion.div>
@@ -460,11 +457,7 @@ export default function MedicalAssistantLanding() {
               transition={{ duration: 0.5, delay: 0.2 }}
               whileHover={{ scale: 1.05 }}
             >
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-blue-200 text-blue-600 hover:bg-blue-50 text-lg px-8 py-3"
-              >
+              <Button size="lg" variant="outline" className="text-lg px-8 py-3">
                 Schedule Demo
               </Button>
             </motion.div>

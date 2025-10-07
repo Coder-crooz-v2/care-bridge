@@ -296,7 +296,7 @@ const MedicineReminderCalendar: React.FC<MedicineReminderCalendarProps> = ({
               className="flex-1"
             />
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <div className="w-3 h-3 bg-blue-500 rounded-full" />
+              <div className="w-3 h-3 bg-primary rounded-full" />
               <span>Reminder dates</span>
             </div>
           </div>
@@ -362,16 +362,16 @@ const MedicineReminderCalendar: React.FC<MedicineReminderCalendarProps> = ({
                       </div>
 
                       {medicineReminder && (
-                        <div className="mt-3 p-3 bg-blue-50 rounded-md">
-                          <div className="flex items-center gap-2 text-sm text-blue-700 mb-1">
+                        <div className="mt-3 p-3 bg-accent rounded-md">
+                          <div className="flex items-center gap-2 text-sm text-accent-foreground mb-1">
                             <Mail className="h-4 w-4" />
                             <span>Email reminders active</span>
                           </div>
-                          <p className="text-xs text-blue-600">
+                          <p className="text-xs text-accent-foreground">
                             {medicineReminder.reminderDates.length} reminders
                             scheduled
                           </p>
-                          <p className="text-xs text-blue-600">
+                          <p className="text-xs text-accent-foreground">
                             Sending to: {medicineReminder.userEmail}
                           </p>
                         </div>
@@ -498,14 +498,14 @@ const MedicineReminderCalendar: React.FC<MedicineReminderCalendarProps> = ({
 
           {medicines.length > 0 &&
             medicines.some((m) => !m.frequency || !m.duration) && (
-              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div className="mt-4 p-4 bg-warning/10 border border-warning rounded-lg">
                 <div className="flex items-start gap-2">
-                  <AlertCircle className="h-5 w-5 text-yellow-500 mt-0.5" />
+                  <AlertCircle className="h-5 w-5 text-warning mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium text-yellow-700">
+                    <p className="text-sm font-medium text-warning">
                       Incomplete Information
                     </p>
-                    <p className="text-sm text-yellow-600 mt-1">
+                    <p className="text-sm text-warning/80 mt-1">
                       Some medicines are missing frequency or duration
                       information. Please edit these details to enable
                       reminders.

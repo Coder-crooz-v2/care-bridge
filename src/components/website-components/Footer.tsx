@@ -3,24 +3,24 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-12">
+    <footer className="bg-card text-card-foreground py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8">
           <div className="col-span-2">
             <div className="flex items-center space-x-2 mb-4">
-              <div className="bg-blue-600 p-2 rounded-lg">
+              <div className="bg-primary p-2 rounded-lg">
                 <Stethoscope className="h-6 w-6 text-white" />
               </div>
               <span className="text-2xl font-bold">CareBridge</span>
             </div>
-            <p className="text-gray-400 mb-4">
+            <p className="text-muted-foreground mb-4">
               Revolutionizing healthcare with AI-powered medical assistance,
               real-time monitoring, and comprehensive patient care solutions.
             </p>
           </div>
           <div>
             <h3 className="font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-gray-400">
+            <ul className="space-y-2 text-muted-foreground">
               <li>
                 <Link
                   href="#features"
@@ -57,7 +57,7 @@ export default function Footer() {
           </div>
           <div>
             <h3 className="font-semibold mb-4">Support</h3>
-            <ul className="space-y-2 text-gray-400">
+            <ul className="space-y-2 text-muted-foreground">
               <li>
                 <Link
                   href="/help"
@@ -93,7 +93,7 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+        <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
           <p>&copy; 2025 CareBridge. All rights reserved.</p>
         </div>
       </div>

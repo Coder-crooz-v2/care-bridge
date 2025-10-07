@@ -76,9 +76,9 @@ const PeriodTracker: React.FC = () => {
   ];
 
   const flowColors = {
-    light: "bg-pink-200 text-pink-800",
-    moderate: "bg-pink-400 text-pink-900",
-    heavy: "bg-pink-600 text-white",
+    light: "bg-accent/30 text-accent-foreground",
+    moderate: "bg-accent/60 text-accent-foreground",
+    heavy: "bg-accent text-accent-foreground",
   };
 
   useEffect(() => {
@@ -190,7 +190,7 @@ const PeriodTracker: React.FC = () => {
     const periodDates = getPeriodDates();
 
     if (periodDates.has(dateString)) {
-      return "bg-pink-500 text-white hover:bg-pink-600";
+      return "bg-accent text-accent-foreground hover:bg-accent/80";
     }
 
     // Predicted next period (if stats available)
@@ -200,7 +200,7 @@ const PeriodTracker: React.FC = () => {
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       if (diffDays <= 2) {
-        return "bg-pink-200 text-pink-800 hover:bg-pink-300";
+        return "bg-accent/30 text-accent-foreground hover:bg-accent/40";
       }
     }
 
@@ -233,7 +233,7 @@ const PeriodTracker: React.FC = () => {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <Circle className="h-5 w-5 text-pink-600" />
+                <Circle className="h-5 w-5 text-accent" />
                 <div>
                   <p className="text-sm text-muted-foreground">Cycle Length</p>
                   <p className="text-2xl font-bold">
@@ -248,7 +248,7 @@ const PeriodTracker: React.FC = () => {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <Droplets className="h-5 w-5 text-pink-600" />
+                <Droplets className="h-5 w-5 text-accent" />
                 <div>
                   <p className="text-sm text-muted-foreground">Cycle Length</p>
                   <p className="text-2xl font-bold">
@@ -263,7 +263,7 @@ const PeriodTracker: React.FC = () => {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <CalendarIcon className="h-5 w-5 text-pink-600" />
+                <CalendarIcon className="h-5 w-5 text-accent" />
                 <div>
                   <p className="text-sm text-muted-foreground">Last Period</p>
                   <p className="text-lg font-bold">
@@ -277,7 +277,7 @@ const PeriodTracker: React.FC = () => {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <CalendarIcon className="h-5 w-5 text-purple-600" />
+                <CalendarIcon className="h-5 w-5 text-secondary" />
                 <div>
                   <p className="text-sm text-muted-foreground">
                     Next Predicted
@@ -407,17 +407,17 @@ const PeriodTracker: React.FC = () => {
                   getPeriodDates().has(date.toISOString().split("T")[0]),
               }}
               modifiersClassNames={{
-                period: "bg-pink-500 text-white hover:bg-pink-600",
+                period: "bg-accent text-accent-foreground hover:bg-accent/80",
               }}
             />
             <div className="mt-4 space-y-2">
               <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 bg-pink-500 rounded" />
+                <div className="w-4 h-4 bg-accent rounded" />
                 <span className="text-sm">Period Days</span>
               </div>
               {stats && (
                 <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-pink-200 rounded" />
+                  <div className="w-4 h-4 bg-accent/30 rounded" />
                   <span className="text-sm">Predicted Next Period</span>
                 </div>
               )}

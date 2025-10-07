@@ -8,18 +8,31 @@ import {
 import { Message, MessageContent } from "@/components/ai-elements/message";
 import {
   PromptInput,
+  PromptInputActionAddAttachments,
+  PromptInputActionMenu,
+  PromptInputActionMenuContent,
+  PromptInputActionMenuTrigger,
+  PromptInputAttachment,
+  PromptInputAttachments,
   PromptInputBody,
+  PromptInputButton,
   type PromptInputMessage,
+  PromptInputModelSelect,
+  PromptInputModelSelectContent,
+  PromptInputModelSelectItem,
+  PromptInputModelSelectTrigger,
+  PromptInputModelSelectValue,
   PromptInputSubmit,
   PromptInputTextarea,
   PromptInputToolbar,
   PromptInputTools,
+  usePromptInputAttachments,
 } from "@/components/ai-elements/prompt-input";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, use, useEffect, useRef, useState } from "react";
 import { useChat } from "@ai-sdk/react";
 import { Response } from "@/components/ai-elements/response";
 import { Loader } from "@/components/ai-elements/loader";
-import { DefaultChatTransport, UIMessage } from "ai";
+import { DefaultChatTransport, FileUIPart, UIMessage } from "ai";
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 import axios from "axios";
 import { toast } from "sonner";
@@ -27,8 +40,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuthStore } from "@/store/useAuth";
 import { useChatList } from "@/store/useChatList";
 import { Action, Actions } from "@/components/ai-elements/actions";
-import { CopyIcon } from "lucide-react";
+import { CopyIcon, GlobeIcon } from "lucide-react";
 import WelcomeCard from "./WelcomeCard";
+import { models } from "@/constants/models";
+import { da } from "date-fns/locale";
 
 interface FetchedMessage {
   id: number;
@@ -42,7 +57,10 @@ const ChatComponent = () => {
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
   const [title, setTitle] = useState("New Chat");
   const [initialMessages, setInitialMessages] = useState<UIMessage[]>([]);
+  const [model, setModel] = useState(models[0].id);
+  const [useWebSearch, setUseWebSearch] = useState(false);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [items, setItems] = useState<(FileUIPart & { id: string })[]>([]);
   const searchParams = useSearchParams();
   const { user } = useAuthStore();
   const { chats, setChats } = useChatList();
@@ -66,22 +84,74 @@ const ChatComponent = () => {
     }
   }, [searchParams, setMessages]);
 
-  const handleSubmit = (message: PromptInputMessage) => {
+  const processFiles = async (messages: PromptInputMessage) => {
+    if (messages.files) {
+      return await Promise.all(
+        Array.from(messages.files).map(
+          (file) =>
+            new Promise<{
+              type: "file";
+              filename: string;
+              mediaType: string;
+              url: string;
+            }>(async (resolve, reject) => {
+              const res = await fetch(file.url);
+              const blob = await res.blob();
+              const reader = new FileReader();
+              reader.onload = () => {
+                resolve({
+                  type: "file",
+                  filename: file.filename || "upload.dat",
+                  mediaType: file.type,
+                  url: reader.result as string, // Data URL
+                });
+              };
+              reader.onerror = reject;
+              reader.readAsDataURL(blob);
+            })
+        )
+      );
+    }
+    return [];
+  };
+
+  const handleSubmit = async (message: PromptInputMessage) => {
     const hasText = Boolean(message.text);
-    console.log(JSON.stringify(message));
-    if (!hasText) {
+    const hasFiles = Boolean(message.files?.length);
+    const payload = await processFiles(message);
+    console.log(message.files);
+    if (!(hasText || hasFiles)) {
       return;
     }
 
-    sendMessage({
-      text: message.text || "No input prompt provided",
-      files: undefined,
-    });
+    console.log(model);
+
+    sendMessage(
+      {
+        role: "user",
+        parts: [
+          {
+            type: "text",
+            text: message.text || "Sent with attachments",
+          },
+          ...payload,
+        ],
+      },
+      {
+        body: {
+          model,
+          useWebSearch,
+        },
+      }
+    );
+
     setInput("");
   };
 
   const handleSuggestionClick = (suggestion: string) => {
-    sendMessage({ text: suggestion, files: undefined });
+    sendMessage({ text: suggestion, files: undefined }, {
+      body: { model }
+    });
     setSuggestions([]);
   };
 
@@ -232,10 +302,10 @@ const ChatComponent = () => {
         {!currentChatId && messages.length === 0 ? (
           <WelcomeCard
             onMoodSelect={(mood) =>
-              sendMessage({ text: `I am feeling ${mood} today` })
+              sendMessage({ text: `I am feeling ${mood} today` }, { body: { model } })
             }
             onQuestionSelect={(question: string) =>
-              sendMessage({ text: question })
+              sendMessage({ text: question }, { body: { model } })
             }
           />
         ) : (
@@ -287,33 +357,100 @@ const ChatComponent = () => {
             <ConversationScrollButton />
           </Conversation>
         )}
-
+        {status === "ready" && (
+          <Suggestions>
+            {suggestions.map((suggestion) => (
+              <Suggestion
+                key={suggestion}
+                onClick={handleSuggestionClick}
+                suggestion={suggestion}
+              />
+            ))}
+          </Suggestions>
+        )}
         <PromptInput
           onSubmit={handleSubmit}
           className="mt-4"
           globalDrop
           multiple
+          maxFiles={2}
+          maxFileSize={10 * 1024 * 512} // 5MB
+          onError={(error) => {
+            toast.error("File upload error", {
+              description: (
+                error as {
+                  code: string;
+                  message: string;
+                }
+              ).message,
+            });
+          }}
+          items={items}
+          setItems={setItems}
+          model={model}
+          setModel={setModel}
         >
           <PromptInputBody>
+            <PromptInputAttachments>
+              {(attachment) => <PromptInputAttachment data={attachment} />}
+            </PromptInputAttachments>
             <PromptInputTextarea
               onChange={(e) => setInput(e.target.value)}
               value={input}
             />
           </PromptInputBody>
           <PromptInputToolbar>
-            {status === "ready" ? (
-              <Suggestions>
-                {suggestions.map((suggestion) => (
-                  <Suggestion
-                    key={suggestion}
-                    onClick={handleSuggestionClick}
-                    suggestion={suggestion}
-                  />
-                ))}
-              </Suggestions>
-            ) : (
-              <PromptInputTools></PromptInputTools>
-            )}
+            <PromptInputTools>
+              <PromptInputActionMenu>
+                <PromptInputActionMenuTrigger
+                  disabled={
+                    items.length > 0 &&
+                    model !== "meta-llama/llama-4-scout-17b-16e-instruct"
+                  }
+                />
+                <PromptInputActionMenuContent>
+                  <PromptInputActionAddAttachments />
+                </PromptInputActionMenuContent>
+              </PromptInputActionMenu>
+              <PromptInputButton
+                onClick={() => {
+                  setUseWebSearch(!useWebSearch);
+                  setModel(models[0].id);
+                }}
+                variant={useWebSearch ? "default" : "ghost"}
+                disabled={items.length > 0}
+              >
+                <GlobeIcon size={16} />
+                <span>Search</span>
+              </PromptInputButton>
+              <PromptInputModelSelect
+                onValueChange={(value) => {
+                  setModel(value);
+                }}
+                value={model}
+              >
+                <PromptInputModelSelectTrigger>
+                  <PromptInputModelSelectValue />
+                </PromptInputModelSelectTrigger>
+                <PromptInputModelSelectContent>
+                  {models
+                    .filter((model) =>
+                      useWebSearch ? model.webSearch === useWebSearch : true
+                    )
+                    .filter((model) =>
+                      items.length === 0 ? true : model.files
+                    )
+                    .map((model) => (
+                      <PromptInputModelSelectItem
+                        key={model.id}
+                        value={model.id}
+                      >
+                        {model.name}
+                      </PromptInputModelSelectItem>
+                    ))}
+                </PromptInputModelSelectContent>
+              </PromptInputModelSelect>
+            </PromptInputTools>
             <PromptInputSubmit
               className="ml-2"
               disabled={!input && !status}

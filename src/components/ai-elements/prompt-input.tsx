@@ -27,6 +27,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { nanoid } from "nanoid";
+import Image from "next/image";
 import {
   type ChangeEventHandler,
   Children,
@@ -84,12 +85,12 @@ export function PromptInputAttachment({
 
   return (
     <div
-      className={cn("group relative h-14 w-14 rounded-md border", className)}
+      className={cn(`group relative h-14 ${data.mediaType?.startsWith("image/") && data.url ? "w-14" : "w-auto"} rounded-md border`, className)}
       key={data.id}
       {...props}
     >
       {data.mediaType?.startsWith("image/") && data.url ? (
-        <img
+        <Image
           alt={data.filename || "attachment"}
           className="size-full rounded-md object-cover"
           height={56}
@@ -97,8 +98,9 @@ export function PromptInputAttachment({
           width={56}
         />
       ) : (
-        <div className="flex size-full items-center justify-center text-muted-foreground">
+        <div className="flex size-full gap-2 px-2 items-center justify-center text-muted-foreground">
           <PaperclipIcon className="size-4" />
+          <span className="text-xs">{data.filename || "attachment"}</span>
         </div>
       )}
       <Button
@@ -214,6 +216,10 @@ export type PromptInputProps = Omit<
     message: PromptInputMessage,
     event: FormEvent<HTMLFormElement>
   ) => void;
+  items: (FileUIPart & { id: string })[];
+  setItems: React.Dispatch<React.SetStateAction<(FileUIPart & { id: string })[]>>;
+  model: string;
+  setModel: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const PromptInput = ({
@@ -226,9 +232,13 @@ export const PromptInput = ({
   maxFileSize,
   onError,
   onSubmit,
+  items,
+  setItems,
+  model,
+  setModel,
   ...props
 }: PromptInputProps) => {
-  const [items, setItems] = useState<(FileUIPart & { id: string })[]>([]);
+  
   const inputRef = useRef<HTMLInputElement | null>(null);
   const anchorRef = useRef<HTMLSpanElement>(null);
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -302,6 +312,9 @@ export const PromptInput = ({
             mediaType: file.type,
             filename: file.name,
           });
+        }
+        if(model !== "meta-llama/llama-4-scout-17b-16e-instruct" && next.length > 0){
+          setModel("meta-llama/llama-4-scout-17b-16e-instruct");
         }
         return prev.concat(next);
       });

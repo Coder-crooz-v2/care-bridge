@@ -361,7 +361,7 @@ const EditablePrescriptionResults: React.FC<
                 {/* Purpose */}
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <Info className="h-4 w-4 text-blue-500" />
+                    <Info className="h-4 w-4 text-accent" />
                     <label className="text-sm font-medium text-muted-foreground">
                       Purpose
                     </label>
@@ -386,7 +386,7 @@ const EditablePrescriptionResults: React.FC<
                 {/* Avoid Groups */}
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <Users className="h-4 w-4 text-orange-500" />
+                    <Users className="h-4 w-4 text-warning" />
                     <label className="text-sm font-medium text-muted-foreground">
                       Who Should Avoid
                     </label>
@@ -425,7 +425,7 @@ const EditablePrescriptionResults: React.FC<
                 {/* Warnings */}
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <AlertTriangle className="h-4 w-4 text-red-500" />
+                    <AlertTriangle className="h-4 w-4 text-destructive" />
                     <label className="text-sm font-medium text-muted-foreground">
                       Warnings
                     </label>
@@ -444,7 +444,7 @@ const EditablePrescriptionResults: React.FC<
                       {medicine.warnings && medicine.warnings.length > 0 ? (
                         medicine.warnings.map((warning, idx) => (
                           <div key={idx} className="flex items-start gap-2">
-                            <div className="w-1 h-1 rounded-full bg-red-500 mt-2 flex-shrink-0" />
+                            <div className="w-1 h-1 rounded-full bg-destructive mt-2 flex-shrink-0" />
                             <p className="text-sm text-muted-foreground">
                               {warning}
                             </p>

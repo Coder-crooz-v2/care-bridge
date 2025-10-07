@@ -71,11 +71,11 @@ const VitalsChart: React.FC<VitalsChartProps> = ({ data }) => {
       {/* Chart Legend */}
       <div className="flex items-center space-x-6 mb-4">
         <div className="flex items-center space-x-2">
-          <div className="w-4 h-0.5 bg-red-500"></div>
+          <div className="w-4 h-0.5 bg-destructive"></div>
           <span className="text-sm text-muted-foreground">Heart Rate</span>
         </div>
         <div className="flex items-center space-x-2">
-          <div className="w-4 h-0.5 bg-blue-500"></div>
+          <div className="w-4 h-0.5 bg-primary"></div>
           <span className="text-sm text-muted-foreground">SpO2</span>
         </div>
       </div>

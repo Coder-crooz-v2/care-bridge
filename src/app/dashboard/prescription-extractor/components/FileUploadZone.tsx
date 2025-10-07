@@ -210,11 +210,11 @@ export default function FileUploadZone({
                 </Button>
               </div>
 
-              <div className="flex items-start gap-2 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
-                <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-                <div className="text-xs text-blue-700 dark:text-blue-300">
+              <div className="flex items-start gap-2 p-3 bg-accent rounded-lg">
+                <AlertCircle className="h-4 w-4 text-accent-foreground mt-0.5 flex-shrink-0" />
+                <div className="text-xs text-accent-foreground">
                   <p className="font-medium mb-1">Image Processing Tips:</p>
-                  <ul className="list-disc list-inside space-y-0.5 text-blue-600 dark:text-blue-400">
+                  <ul className="list-disc list-inside space-y-0.5 text-accent-foreground">
                     <li>
                       Ensure the prescription is clearly visible and well-lit
                     </li>

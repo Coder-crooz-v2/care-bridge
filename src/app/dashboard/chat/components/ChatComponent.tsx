@@ -149,9 +149,12 @@ const ChatComponent = () => {
   };
 
   const handleSuggestionClick = (suggestion: string) => {
-    sendMessage({ text: suggestion, files: undefined }, {
-      body: { model }
-    });
+    sendMessage(
+      { text: suggestion, files: undefined },
+      {
+        body: { model },
+      }
+    );
     setSuggestions([]);
   };
 
@@ -233,12 +236,7 @@ const ChatComponent = () => {
 
             return messages;
           })
-          .flat()
-          .sort((a: UIMessage, b: UIMessage) => {
-            const aId: number = parseInt(a.id.split("-")[0]);
-            const bId: number = parseInt(b.id.split("-")[0]);
-            return aId - bId;
-          });
+          .flat();
 
         setMessages(transformedMessages);
       } else {
@@ -302,7 +300,10 @@ const ChatComponent = () => {
         {!currentChatId && messages.length === 0 ? (
           <WelcomeCard
             onMoodSelect={(mood) =>
-              sendMessage({ text: `I am feeling ${mood} today` }, { body: { model } })
+              sendMessage(
+                { text: `I am feeling ${mood} today` },
+                { body: { model } }
+              )
             }
             onQuestionSelect={(question: string) =>
               sendMessage({ text: question }, { body: { model } })

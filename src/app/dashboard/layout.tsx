@@ -2,7 +2,6 @@
 
 import { Suspense } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
-import { DynamicBreadcrumb } from "@/components/dynamic-breadcrumb";
 import {
   SidebarInset,
   SidebarProvider,
@@ -68,7 +67,6 @@ export default function DashboardLayout({
                       <div className="h-4 w-32 bg-muted animate-pulse rounded" />
                     }
                   >
-                    <DynamicBreadcrumb />
                   </Suspense>
                 </div>
               </header>

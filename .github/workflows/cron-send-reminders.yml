@@ -1,0 +1,28 @@
+name: Trigger send-reminders cron
+
+on:
+  schedule:
+    # Runs at 09:00, 12:00 and 20:00 UTC daily (adjust if needed)
+    - cron: '0 9 * * *'
+    - cron: '0 12 * * *'
+    - cron: '0 20 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  call-cron-endpoint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call reminders endpoint (curl)
+        env:
+          CRON_ENDPOINT: "https://care-bridge-lake.vercel.app/api/cron/send-reminders"
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          echo "Calling cron endpoint: $CRON_ENDPOINT"
+          status=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $CRON_SECRET" "$CRON_ENDPOINT")
+          echo "HTTP status: $status"
+          if [ "$status" -ge 200 ] && [ "$status" -lt 300 ]; then
+            echo "Cron endpoint responded successfully."
+          else
+            echo "Cron endpoint failed with status $status"
+            exit 1
+          fi

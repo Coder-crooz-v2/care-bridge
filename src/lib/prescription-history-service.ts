@@ -1,13 +1,13 @@
 import { createClient } from "@/utils/supabase/client";
 
 const supabase = createClient();
-import { MedicineDetail } from "@/types/prescription";
+import { Medicine } from "@/types/prescription";
 
 export interface PrescriptionHistory {
   id: string;
   title: string;
   image_url?: string;
-  medicines: MedicineDetail[];
+  medicines: Medicine[];
   extracted_data?: any;
   reminder_dates?: any;
   created_at: string;
@@ -24,7 +24,7 @@ export class PrescriptionHistoryService {
   }: {
     title: string;
     imageUrl?: string;
-    medicines: MedicineDetail[];
+    medicines: Medicine[];
     extractedData?: any;
     reminderDates?: any;
   }): Promise<{

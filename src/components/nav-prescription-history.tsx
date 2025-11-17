@@ -13,6 +13,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuAction,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import {
   Stethoscope,
@@ -35,6 +37,10 @@ import {
   PrescriptionHistory,
 } from "@/lib/prescription-history-service";
 import { toast } from "sonner";
+import axios, { AxiosError } from "axios";
+import { usePrescriptionList } from "@/store/usePrescriptionList";
+import { set } from "date-fns";
+import { useAuthStore } from "@/store/useAuth";
 
 interface NavPrescriptionHistoryProps {
   activePrescriptionId?: string;
@@ -43,68 +49,48 @@ interface NavPrescriptionHistoryProps {
 export function NavPrescriptionHistory({
   activePrescriptionId,
 }: NavPrescriptionHistoryProps) {
-  const [mounted, setMounted] = useState(false);
-  const [prescriptions, setPrescriptions] = useState<PrescriptionHistory[]>([]);
+  const { prescriptionList, setPrescriptionList } = usePrescriptionList();
+  const { user } = useAuthStore();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const pathname = usePathname();
 
-  // Handle hydration
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const fetchPrescriptions = async () => {
+    setLoading(true);
     try {
-      const response =
-        await PrescriptionHistoryService.getPrescriptionHistory();
-      if (response.success && response.data) {
-        setPrescriptions(response.data);
+      const response = await axios.get(
+        `/api/prescriptions?user_id=${user?.id}`
+      );
+
+      if (response.data && response.data.length > 0) {
+        setPrescriptionList(response.data);
       } else {
-        console.error("Failed to fetch prescriptions:", response.error);
+        setPrescriptionList([]);
       }
     } catch (error) {
       console.error("Error fetching prescriptions:", error);
+      toast.error("Failed to load prescription history", {
+        description:
+          error instanceof AxiosError ? error.message : "Unknown error",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (!mounted) return;
-
-    fetchPrescriptions();
-
-    // Listen for prescription updates from other components
-    const handlePrescriptionUpdate = () => {
-      fetchPrescriptions();
-    };
-
-    if (typeof window !== "undefined") {
-      window.addEventListener("prescription-updated", handlePrescriptionUpdate);
+    if (!user) {
+      return;
     }
-
-    return () => {
-      if (typeof window !== "undefined") {
-        window.removeEventListener(
-          "prescription-updated",
-          handlePrescriptionUpdate
-        );
-      }
-    };
-  }, [mounted]);
+    fetchPrescriptions();
+  }, [user]);
 
   const handleNewPrescription = () => {
-    // Clear any existing prescription ID from URL and force reload to upload state
     router.push("/dashboard/prescription-extractor");
-    // Dispatch event to reset the main component
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("start-new-prescription"));
-    }
   };
 
   const handlePrescriptionClick = (prescriptionId: string) => {
-    router.push(`/dashboard/prescription-extractor?id=${prescriptionId}`);
+    router.push(`/dashboard/prescription-extractor?id=${prescriptionId}&from=history`);
   };
 
   const handleDeletePrescription = async (
@@ -113,108 +99,69 @@ export function NavPrescriptionHistory({
   ) => {
     if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
 
-    const response = await PrescriptionHistoryService.deletePrescription(
-      prescriptionId
-    );
-    if (response.success) {
-      setPrescriptions((prev) => prev.filter((p) => p.id !== prescriptionId));
-      toast.success("Prescription deleted successfully");
-
-      // If we're currently viewing this prescription, redirect to main page
-      if (activePrescriptionId === prescriptionId) {
+    try {
+      const response = await axios.delete(
+        `/api/prescriptions?id=${prescriptionId}`
+      );
+      if (response.status === 200) {
+        toast.success("Prescription deleted successfully");
+        setPrescriptionList(
+          prescriptionList.filter((p) => p.id !== prescriptionId)
+        );
         router.push("/dashboard/prescription-extractor");
-        // Dispatch event to reset the main component to upload state
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new CustomEvent("start-new-prescription"));
-        }
+      } else {
+        toast.error(response.data.error || "Failed to delete prescription");
       }
-    } else {
-      toast.error(response.error || "Failed to delete prescription");
+    } catch (error) {
+      console.error("Error deleting prescription:", error);
+      toast.error("Failed to delete prescription", {
+        description:
+          error instanceof AxiosError ? error.message : "Unknown error",
+      });
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const getMedicineCount = (medicines: any[]): number => {
-    return medicines?.length || 0;
-  };
-
-  // Don't render until mounted to prevent hydration mismatch
-  if (!mounted) {
-    return (
-      <SidebarGroup>
-        <SidebarGroupLabel>Prescription History</SidebarGroupLabel>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <div className="flex items-center px-2 py-1 text-xs text-muted-foreground">
-              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-muted-foreground mr-2" />
-              Loading...
-            </div>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarGroup>
-    );
-  }
-
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Prescription History</SidebarGroupLabel>
+      <SidebarGroupLabel>Prescription Extractor</SidebarGroupLabel>
       <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            tooltip="Upload new"
+            onClick={handleNewPrescription}
+          >
+            <Plus className="h-4 w-4" />
+            <span className="font-medium">Upload new</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
         <Collapsible
           defaultOpen={pathname.includes("/dashboard/prescription-extractor")}
           className="group/collapsible"
         >
           <SidebarMenuItem>
             <CollapsibleTrigger asChild>
-              <SidebarMenuButton
-                tooltip="Prescription Extractor"
-                className="font-medium"
-                onClick={() => {
-                  if (!pathname.includes("/dashboard/prescription-extractor")) {
-                    handleNewPrescription();
-                  }
-                }}
-              >
+              <SidebarMenuButton tooltip="Prescription History">
                 <Stethoscope className="h-4 w-4" />
-                <span>Prescription Extractor</span>
+                <span>Prescription History</span>
                 <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
               </SidebarMenuButton>
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <SidebarMenu>
-                {/* New Prescription Button */}
-                <SidebarMenuItem>
-                  <SidebarMenuButton
-                    asChild
-                    size="sm"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <button onClick={handleNewPrescription}>
-                      <Plus className="h-3 w-3" />
-                      <span>New Prescription</span>
-                    </button>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-
+              <SidebarMenuSub>
                 {/* Loading State */}
                 {loading && (
-                  <SidebarMenuItem>
+                  <SidebarMenuSubItem>
                     <div className="flex items-center px-2 py-1 text-xs text-muted-foreground">
                       <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-muted-foreground mr-2" />
                       Loading...
                     </div>
-                  </SidebarMenuItem>
+                  </SidebarMenuSubItem>
                 )}
 
                 {/* Prescription History */}
                 {!loading &&
-                  prescriptions.map((prescription) => (
-                    <SidebarMenuItem key={prescription.id}>
+                  prescriptionList.map((prescription) => (
+                    <SidebarMenuSubItem key={prescription.id}>
                       <SidebarMenuButton
                         asChild
                         size="sm"
@@ -232,15 +179,6 @@ export function NavPrescriptionHistory({
                               <div className="font-medium text-xs truncate">
                                 {prescription.title}
                               </div>
-                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <div className="flex items-center gap-1">
-                                  <Pill className="h-3 w-3" />
-                                  {getMedicineCount(prescription.medicines)}
-                                </div>
-                                <span>
-                                  {formatDate(prescription.created_at)}
-                                </span>
-                              </div>
                             </div>
                           </div>
                         </button>
@@ -257,14 +195,6 @@ export function NavPrescriptionHistory({
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem
-                              onClick={() =>
-                                handlePrescriptionClick(prescription.id)
-                              }
-                            >
-                              <Stethoscope className="mr-2 h-4 w-4" />
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
                               className="text-destructive"
                               onClick={() =>
                                 handleDeletePrescription(
@@ -279,18 +209,18 @@ export function NavPrescriptionHistory({
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </SidebarMenuAction>
-                    </SidebarMenuItem>
+                    </SidebarMenuSubItem>
                   ))}
 
                 {/* Empty State */}
-                {!loading && prescriptions.length === 0 && (
+                {!loading && prescriptionList.length === 0 && (
                   <SidebarMenuItem>
                     <div className="px-2 py-1 text-xs text-muted-foreground">
                       No prescriptions yet
                     </div>
                   </SidebarMenuItem>
                 )}
-              </SidebarMenu>
+              </SidebarMenuSub>
             </CollapsibleContent>
           </SidebarMenuItem>
         </Collapsible>

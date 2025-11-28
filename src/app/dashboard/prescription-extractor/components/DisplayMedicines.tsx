@@ -10,6 +10,7 @@ import { Medicine } from "@/types/prescription";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import axios from "axios";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const DisplayMedicines = () => {
   const { medicines, setMedicines, prescriptionList } = usePrescriptionList();
@@ -23,6 +24,9 @@ const DisplayMedicines = () => {
   const [currentPrescriptionId, setCurrentPrescriptionId] = useState<
     string | null
   >(null);
+  const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(
+    null
+  );
 
   useEffect(() => {
     const id = searchParams.get("id");
@@ -97,8 +101,19 @@ const DisplayMedicines = () => {
     setMedicines(updatedMedicines);
   };
 
+  const handleCardClick = (medicine: Medicine) => {
+    setSelectedMedicine(medicine);
+    toast.info(`Showing reminder dates for ${medicine.medicine}`);
+  };
+
+  const handleReminderCancelled = (medicineId: string) => {
+    if (selectedMedicine && selectedMedicine.id === medicineId) {
+      setSelectedMedicine(null);
+    }
+  };
+
   return (
-    <div className="w-full h-[calc(100vh-2rem)] max-h-[calc(100vh-2rem)] p-6 flex flex-col overflow-hidden">
+    <div className="w-full h-full max-h-[calc(100vh-8rem)] p-6 flex flex-col overflow-hidden">
       {/* Prescription Title */}
       <div className="mb-4 flex items-center justify-between flex-shrink-0">
         {isEditingTitle ? (
@@ -128,15 +143,12 @@ const DisplayMedicines = () => {
       </div>
 
       {/* Main Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0 overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-0 overflow-hidden">
         {/* Left Section: Medicine List */}
         <div className="lg:col-span-2 flex flex-col min-h-0 overflow-hidden">
-          <Card className="flex-1 flex flex-col min-h-0 overflow-hidden">
-            <CardHeader className="flex-shrink-0 pb-3">
-              <CardTitle>Medicines</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1 min-h-0 overflow-hidden p-0 px-6 pb-6">
-              <div className="h-full overflow-y-auto pr-2 space-y-4">
+          <Card className="flex flex-col overflow-hidden p-0 bg-transprarent border-0 rounded-none">
+            <CardContent className="min-h-0 overflow-hidden p-0">
+              <ScrollArea className="h-full pr-4 space-y-4">
                 {medicines.length > 0 ? (
                   medicines.map((medicine, index) => (
                     <MedicineCard
@@ -144,6 +156,8 @@ const DisplayMedicines = () => {
                       medicine={medicine}
                       onSave={(updated) => handleMedicineSave(index, updated)}
                       onDelete={handleMedicineDelete}
+                      onCardClick={handleCardClick}
+                      onReminderCancelled={handleReminderCancelled}
                     />
                   ))
                 ) : (
@@ -153,7 +167,7 @@ const DisplayMedicines = () => {
                     </p>
                   </div>
                 )}
-              </div>
+              </ScrollArea>
             </CardContent>
           </Card>
         </div>
@@ -161,7 +175,7 @@ const DisplayMedicines = () => {
         {/* Right Sidebar */}
         <div className="flex flex-col gap-6 min-h-0 overflow-hidden">
           <div className="flex-shrink-0">
-            <CalendarSection />
+            <CalendarSection selectedMedicine={selectedMedicine} />
           </div>
           {/* <div className="flex-shrink-0">
             <Disclaimer />

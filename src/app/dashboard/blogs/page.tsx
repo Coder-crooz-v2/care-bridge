@@ -280,26 +280,33 @@ export default function BlogsPage() {
 
   if (selectedPost) {
     return (
-      <div className="container mx-auto p-6 max-w-4xl">
-        <Button variant="outline" onClick={handleBackToList} className="mb-6">
+      <div className="container mx-auto p-4 sm:p-6 max-w-4xl">
+        <Button
+          variant="outline"
+          onClick={handleBackToList}
+          className="mb-4 sm:mb-6 text-sm sm:text-base"
+        >
           ← Back to Articles
         </Button>
 
-        <article className="space-y-6">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Calendar className="h-4 w-4" />
+        <article className="space-y-4 sm:space-y-6">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+              <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
               {new Date(selectedPost.publishedDate).toLocaleDateString()}
-              <Clock className="h-4 w-4 ml-4" />
+              <Clock className="h-3 w-3 sm:h-4 sm:w-4 ml-2 sm:ml-4" />
               {selectedPost.readTime} min read
             </div>
 
-            <h1 className="text-4xl font-bold tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
               {selectedPost.title}
             </h1>
 
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="capitalize">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge
+                variant="secondary"
+                className="capitalize text-xs sm:text-sm"
+              >
                 {selectedPost.category.replace("-", " ")}
               </Badge>
               {selectedPost.tags.map((tag) => (
@@ -311,31 +318,33 @@ export default function BlogsPage() {
           </div>
 
           <div className="prose max-w-none">
-            <p className="text-lg text-muted-foreground mb-8">
+            <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8">
               {selectedPost.excerpt}
             </p>
-            <p className="mb-8">{selectedPost.content}</p>
+            <p className="mb-6 sm:mb-8 text-sm sm:text-base">
+              {selectedPost.content}
+            </p>
 
-            <h2 className="text-2xl font-semibold mb-4">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-3 sm:mb-4">
               Step-by-Step Action Plan
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {selectedPost.steps.map((step, index) => (
                 <div
                   key={index}
-                  className="flex gap-4 p-4 bg-muted/50 rounded-lg"
+                  className="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-muted/50 rounded-lg"
                 >
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold">
+                  <div className="flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold text-sm sm:text-base">
                     {index + 1}
                   </div>
-                  <p className="flex-1">{step}</p>
+                  <p className="flex-1 text-sm sm:text-base">{step}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="border-t pt-6">
-            <p className="text-sm text-muted-foreground">
+          <div className="border-t pt-4 sm:pt-6">
+            <p className="text-xs sm:text-sm text-muted-foreground">
               <strong>Disclaimer:</strong> This article is for informational
               purposes only and is not intended as medical advice. Always
               consult with qualified healthcare professionals before making
@@ -348,32 +357,32 @@ export default function BlogsPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex flex-col space-y-4">
+    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col space-y-3 sm:space-y-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
             Health & Wellness Blog
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
             Expert insights and practical guidance on mental health, women's
             health, and general wellness
           </p>
         </div>
 
         {/* Search and Filters */}
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-col md:flex-row gap-3 sm:gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search articles..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 text-sm sm:text-base"
             />
           </div>
 
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-full md:w-[200px] text-sm sm:text-base">
               <Filter className="h-4 w-4 mr-2" />
               <SelectValue placeholder="Category" />
             </SelectTrigger>
@@ -387,7 +396,7 @@ export default function BlogsPage() {
           </Select>
 
           <Select value={selectedTag} onValueChange={setSelectedTag}>
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-full md:w-[200px] text-sm sm:text-base">
               <Tag className="h-4 w-4 mr-2" />
               <SelectValue placeholder="Tag" />
             </SelectTrigger>
@@ -405,41 +414,44 @@ export default function BlogsPage() {
 
       {/* Category Tabs */}
       <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-6">
+        <TabsList className="grid w-full grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-1">
           {categories.map((category) => {
             const Icon = category.icon;
             return (
               <TabsTrigger
                 key={category.id}
                 value={category.id}
-                className="flex items-center gap-2"
+                className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-3 w-3 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">{category.label}</span>
               </TabsTrigger>
             );
           })}
         </TabsList>
 
-        <TabsContent value={selectedCategory} className="mt-6">
+        <TabsContent value={selectedCategory} className="mt-4 sm:mt-6">
           {filteredPosts.length === 0 ? (
-            <div className="text-center py-12">
-              <BookOpen className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p className="text-muted-foreground">
+            <div className="text-center py-8 sm:py-12">
+              <BookOpen className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 opacity-50" />
+              <p className="text-sm sm:text-base text-muted-foreground">
                 No articles found matching your criteria.
               </p>
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
               {filteredPosts.map((post) => (
                 <Card
                   key={post.id}
                   className="cursor-pointer hover:shadow-lg transition-shadow"
                   onClick={() => handlePostClick(post)}
                 >
-                  <CardHeader>
+                  <CardHeader className="p-4 sm:p-6">
                     <div className="flex items-center justify-between mb-2">
-                      <Badge variant="secondary" className="capitalize">
+                      <Badge
+                        variant="secondary"
+                        className="capitalize text-xs sm:text-sm"
+                      >
                         {post.category.replace("-", " ")}
                       </Badge>
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -447,15 +459,15 @@ export default function BlogsPage() {
                         {post.readTime} min
                       </div>
                     </div>
-                    <CardTitle className="text-lg leading-tight">
+                    <CardTitle className="text-base sm:text-lg leading-tight">
                       {post.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                  <CardContent className="p-4 sm:p-6 pt-0">
+                    <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 line-clamp-3">
                       {post.excerpt}
                     </p>
-                    <div className="flex flex-wrap gap-1 mb-4">
+                    <div className="flex flex-wrap gap-1 mb-3 sm:mb-4">
                       {post.tags.slice(0, 3).map((tag) => (
                         <Badge key={tag} variant="outline" className="text-xs">
                           {tag}
@@ -470,9 +482,21 @@ export default function BlogsPage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
                         <Calendar className="h-3 w-3" />
-                        {new Date(post.publishedDate).toLocaleDateString()}
+                        <span className="hidden sm:inline">
+                          {new Date(post.publishedDate).toLocaleDateString()}
+                        </span>
+                        <span className="sm:hidden">
+                          {new Date(post.publishedDate).toLocaleDateString(
+                            "en-US",
+                            { month: "short", day: "numeric" }
+                          )}
+                        </span>
                       </div>
-                      <Button variant="ghost" size="sm">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs sm:text-sm"
+                      >
                         Read More →
                       </Button>
                     </div>

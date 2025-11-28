@@ -183,15 +183,15 @@ const MedicineCard = ({
 
   return (
     <Card
-      className={`mb-4 bg-gradient-to-br to-blue-50 from-neutral-100 border-blue-200 ${
+      className={`mb-3 sm:mb-4 bg-gradient-to-br to-blue-50 from-neutral-100 border-blue-200 ${
         !isEditing && hasActiveReminder
           ? "cursor-pointer hover:shadow-lg transition-shadow"
           : ""
       }`}
       onClick={handleCardClick}
     >
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg font-semibold text-blue-900">
+      <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 p-4 sm:p-6">
+        <CardTitle className="text-base sm:text-lg font-semibold text-blue-900 w-full sm:w-auto">
           {isEditing ? (
             <Input
               value={editedMedicine.medicine}
@@ -202,13 +202,13 @@ const MedicineCard = ({
                 })
               }
               placeholder="Medicine name"
-              className="bg-white"
+              className="bg-white text-sm sm:text-base"
             />
           ) : (
             medicine.medicine
           )}
         </CardTitle>
-        <div className="flex gap-2 items-center">
+        <div className="flex flex-wrap gap-2 items-center w-full sm:w-auto">
           <Button
             variant="ghost"
             size="icon"
@@ -217,9 +217,9 @@ const MedicineCard = ({
               handleDelete();
             }}
             disabled={isDeleting}
-            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+            className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 w-8 sm:h-10 sm:w-10"
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
           {hasActiveReminder ? (
             <Button
@@ -230,10 +230,11 @@ const MedicineCard = ({
                 handleCancelReminder();
               }}
               disabled={isCancelingReminder || isEditing}
-              className="gap-2 bg-white hover:bg-gray-50"
+              className="gap-1 sm:gap-2 bg-white hover:bg-gray-50 text-xs sm:text-sm px-2 sm:px-3"
             >
-              <BellOff className="h-4 w-4" />
-              {isCancelingReminder ? "Canceling..." : "Cancel Reminder"}
+              <BellOff className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">{isCancelingReminder ? "Canceling..." : "Cancel Reminder"}</span>
+              <span className="sm:hidden">Cancel</span>
             </Button>
           ) : (
             <Button
@@ -244,10 +245,11 @@ const MedicineCard = ({
                 handleSetReminder();
               }}
               disabled={isSettingReminder || isEditing || isCheckingReminder}
-              className="gap-2 bg-white hover:bg-gray-50"
+              className="gap-1 sm:gap-2 bg-white hover:bg-gray-50 text-xs sm:text-sm px-2 sm:px-3"
             >
-              <Bell className="h-4 w-4" />
-              {isSettingReminder ? "Setting..." : "Set Reminder"}
+              <Bell className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">{isSettingReminder ? "Setting..." : "Set Reminder"}</span>
+              <span className="sm:hidden">Set</span>
             </Button>
           )}
           {isEditing ? (
@@ -259,7 +261,7 @@ const MedicineCard = ({
                 }}
                 size="sm"
                 disabled={isSaving}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-blue-600 hover:bg-blue-700 text-xs sm:text-sm px-2 sm:px-3"
               >
                 {isSaving ? "Saving..." : "Save"}
               </Button>
@@ -271,7 +273,7 @@ const MedicineCard = ({
                 variant="outline"
                 size="sm"
                 disabled={isSaving}
-                className="bg-white hover:bg-gray-50"
+                className="bg-white hover:bg-gray-50 text-xs sm:text-sm px-2 sm:px-3"
               >
                 Cancel
               </Button>
@@ -283,17 +285,18 @@ const MedicineCard = ({
                 setIsEditing(true);
               }}
               size="sm"
+              className="text-xs sm:text-sm px-2 sm:px-3"
             >
               Edit
             </Button>
           )}
         </div>
       </CardHeader>
-      <CardContent className="space-y-4 py-3">
+      <CardContent className="space-y-3 sm:space-y-4 py-2 sm:py-3 px-4 sm:px-6">
         {/* First Row: Dosage, Timing, Duration */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <Label className="text-blue-800 font-medium text-sm">Dosage</Label>
+            <Label className="text-blue-800 font-medium text-xs sm:text-sm">Dosage</Label>
             {isEditing ? (
               <Input
                 value={editedMedicine.dosage || ""}
@@ -304,16 +307,16 @@ const MedicineCard = ({
                   })
                 }
                 placeholder="Dosage"
-                className="mt-1 bg-white"
+                className="mt-1 bg-white text-sm"
               />
             ) : (
-              <p className="mt-1 text-sm text-gray-700">
+              <p className="mt-1 text-xs sm:text-sm text-gray-700">
                 {medicine.dosage || "Not specified"}
               </p>
             )}
           </div>
           <div>
-            <Label className="text-blue-800 font-medium text-sm">Timing</Label>
+            <Label className="text-blue-800 font-medium text-xs sm:text-sm">Timing</Label>
             {isEditing ? (
               <div className="space-y-2 mt-1">
                 <div className="flex items-center space-x-2">
@@ -327,7 +330,7 @@ const MedicineCard = ({
                       });
                     }}
                   />
-                  <Label htmlFor="morning" className="cursor-pointer text-sm">
+                  <Label htmlFor="morning" className="cursor-pointer text-xs sm:text-sm">
                     Morning
                   </Label>
                 </div>
@@ -342,7 +345,7 @@ const MedicineCard = ({
                       });
                     }}
                   />
-                  <Label htmlFor="noon" className="cursor-pointer text-sm">
+                  <Label htmlFor="noon" className="cursor-pointer text-xs sm:text-sm">
                     Noon
                   </Label>
                 </div>
@@ -357,13 +360,13 @@ const MedicineCard = ({
                       });
                     }}
                   />
-                  <Label htmlFor="night" className="cursor-pointer text-sm">
+                  <Label htmlFor="night" className="cursor-pointer text-xs sm:text-sm">
                     Night
                   </Label>
                 </div>
               </div>
             ) : (
-              <p className="mt-1 text-sm text-gray-700">
+              <p className="mt-1 text-xs sm:text-sm text-gray-700">
                 {medicine.morning && "Morning "}
                 {medicine.noon && "Noon "}
                 {medicine.night && "Night"}
@@ -375,7 +378,7 @@ const MedicineCard = ({
             )}
           </div>
           <div>
-            <Label className="text-blue-800 font-medium text-sm">
+            <Label className="text-blue-800 font-medium text-xs sm:text-sm">
               Duration
             </Label>
             {isEditing ? (
@@ -390,10 +393,10 @@ const MedicineCard = ({
                 }
                 placeholder="Duration"
                 min="1"
-                className="mt-1 bg-white"
+                className="mt-1 bg-white text-sm"
               />
             ) : (
-              <p className="mt-1 text-sm text-gray-700">
+              <p className="mt-1 text-xs sm:text-sm text-gray-700">
                 {medicine.duration || 1} days
               </p>
             )}
@@ -401,9 +404,9 @@ const MedicineCard = ({
         </div>
 
         {/* Second Row: Instructions and Notes */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <Label className="text-blue-800 font-medium text-sm">
+            <Label className="text-blue-800 font-medium text-xs sm:text-sm">
               Instructions
             </Label>
             {isEditing ? (
@@ -416,16 +419,16 @@ const MedicineCard = ({
                   })
                 }
                 placeholder="Instructions"
-                className="mt-1 bg-white"
+                className="mt-1 bg-white text-sm"
               />
             ) : (
-              <p className="mt-1 text-sm text-gray-700">
+              <p className="mt-1 text-xs sm:text-sm text-gray-700">
                 {medicine.instructions || "Not specified"}
               </p>
             )}
           </div>
           <div>
-            <Label className="text-blue-800 font-medium text-sm">Notes</Label>
+            <Label className="text-blue-800 font-medium text-xs sm:text-sm">Notes</Label>
             {isEditing ? (
               <Input
                 value={editedMedicine.notes || ""}
@@ -436,10 +439,10 @@ const MedicineCard = ({
                   })
                 }
                 placeholder="Notes"
-                className="mt-1 bg-white"
+                className="mt-1 bg-white text-sm"
               />
             ) : (
-              <p className="mt-1 text-sm text-gray-700">
+              <p className="mt-1 text-xs sm:text-sm text-gray-700">
                 {medicine.notes || "No notes"}
               </p>
             )}

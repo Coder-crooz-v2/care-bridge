@@ -113,42 +113,56 @@ const DisplayMedicines = () => {
   };
 
   return (
-    <div className="w-full h-full max-h-[calc(100vh-8rem)] p-6 flex flex-col overflow-hidden">
+    <div className="w-full h-full max-h-[calc(100vh-8rem)] p-3 sm:p-4 md:p-6 flex flex-col overflow-hidden">
       {/* Prescription Title */}
-      <div className="mb-4 flex items-center justify-between flex-shrink-0">
+      <div className="mb-3 sm:mb-4 flex items-center justify-between flex-shrink-0">
         {isEditingTitle ? (
-          <div className="flex items-center gap-4 flex-1">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 flex-1">
             <Input
               value={editedTitle}
               onChange={(e) => setEditedTitle(e.target.value)}
-              className="text-2xl font-bold"
+              className="text-lg sm:text-xl md:text-2xl font-bold"
             />
-            <Button onClick={handleTitleSave} disabled={isSavingTitle}>
-              {isSavingTitle ? "Saving..." : "Save"}
-            </Button>
-            <Button
-              onClick={handleTitleCancel}
-              variant="outline"
-              disabled={isSavingTitle}
-            >
-              Cancel
-            </Button>
+            <div className="flex gap-2 w-full sm:w-auto">
+              <Button
+                onClick={handleTitleSave}
+                disabled={isSavingTitle}
+                className="text-sm sm:text-base flex-1 sm:flex-initial"
+              >
+                {isSavingTitle ? "Saving..." : "Save"}
+              </Button>
+              <Button
+                onClick={handleTitleCancel}
+                variant="outline"
+                disabled={isSavingTitle}
+                className="text-sm sm:text-base flex-1 sm:flex-initial"
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
         ) : (
-          <div className="flex items-center gap-4 flex-1">
-            <h1 className="text-2xl font-bold">{prescriptionTitle}</h1>
-            <Button onClick={() => setIsEditingTitle(true)}>Edit</Button>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 flex-1">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold">
+              {prescriptionTitle}
+            </h1>
+            <Button
+              onClick={() => setIsEditingTitle(true)}
+              className="text-sm sm:text-base"
+            >
+              Edit
+            </Button>
           </div>
         )}
       </div>
 
       {/* Main Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 min-h-0 overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 min-h-0 overflow-hidden">
         {/* Left Section: Medicine List */}
         <div className="lg:col-span-2 flex flex-col min-h-0 overflow-hidden">
           <Card className="flex flex-col overflow-hidden p-0 bg-transprarent border-0 rounded-none">
             <CardContent className="min-h-0 overflow-hidden p-0">
-              <ScrollArea className="h-full pr-4 space-y-4">
+              <ScrollArea className="h-full pr-2 sm:pr-4 space-y-3 sm:space-y-4">
                 {medicines.length > 0 ? (
                   medicines.map((medicine, index) => (
                     <MedicineCard
@@ -162,7 +176,7 @@ const DisplayMedicines = () => {
                   ))
                 ) : (
                   <div className="flex items-center justify-center h-full">
-                    <p className="text-center text-gray-500">
+                    <p className="text-center text-gray-500 text-sm sm:text-base">
                       No medicines to display
                     </p>
                   </div>
@@ -173,7 +187,7 @@ const DisplayMedicines = () => {
         </div>
 
         {/* Right Sidebar */}
-        <div className="flex flex-col gap-6 min-h-0 overflow-hidden">
+        <div className="flex flex-col gap-4 sm:gap-6 min-h-0 overflow-hidden">
           <div className="flex-shrink-0">
             <CalendarSection selectedMedicine={selectedMedicine} />
           </div>

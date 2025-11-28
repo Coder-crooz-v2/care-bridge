@@ -123,14 +123,14 @@ export default function NearbyServicesPage() {
   const pharmacies = filteredData.filter((item) => item.type === "pharmacy");
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex flex-col space-y-4">
-        <div className="flex items-center justify-between">
+    <div className="container mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col space-y-3 sm:space-y-4">
+        <div className="flex items-start sm:items-center justify-between flex-col sm:flex-row gap-2">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
               Nearby Services
             </h1>
-            <p className="text-muted-foreground mt-2">
+            <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
               Find nearby clinics and pharmacies in your area
             </p>
           </div>
@@ -138,40 +138,42 @@ export default function NearbyServicesPage() {
 
         {/* Search Bar */}
         <div className="flex items-center space-x-2">
-          <div className="relative flex-1 max-w-md">
+          <div className="relative flex-1 max-w-full sm:max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search clinics and pharmacies..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 text-sm sm:text-base"
             />
           </div>
         </div>
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList>
-            <TabsTrigger value="all">All ({filteredData.length})</TabsTrigger>
-            <TabsTrigger value="clinics">
+          <TabsList className="w-full sm:w-auto">
+            <TabsTrigger value="all" className="text-xs sm:text-sm">
+              All ({filteredData.length})
+            </TabsTrigger>
+            <TabsTrigger value="clinics" className="text-xs sm:text-sm">
               Clinics ({clinics.length})
             </TabsTrigger>
-            <TabsTrigger value="pharmacies">
+            <TabsTrigger value="pharmacies" className="text-xs sm:text-sm">
               Pharmacies ({pharmacies.length})
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="all" className="space-y-6">
+          <TabsContent value="all" className="space-y-4 sm:space-y-6">
             {/* Clinics */}
             {clinics.length > 0 && (
               <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Building2 className="h-5 w-5 text-primary" />
-                  <h2 className="text-xl font-semibold text-primary">
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                  <Building2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                  <h2 className="text-lg sm:text-xl font-semibold text-primary">
                     Clinics
                   </h2>
                 </div>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {clinics.map((clinic) => (
                     <ServiceCard
                       key={clinic.id}
@@ -186,13 +188,13 @@ export default function NearbyServicesPage() {
             {/* Pharmacies */}
             {pharmacies.length > 0 && (
               <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Pill className="h-5 w-5 text-success" />
-                  <h2 className="text-xl font-semibold text-success">
+                <div className="flex items-center gap-2 mb-3 sm:mb-4">
+                  <Pill className="h-4 w-4 sm:h-5 sm:w-5 text-success" />
+                  <h2 className="text-lg sm:text-xl font-semibold text-success">
                     Pharmacies
                   </h2>
                 </div>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {pharmacies.map((pharmacy) => (
                     <ServiceCard
                       key={pharmacy.id}
@@ -206,7 +208,7 @@ export default function NearbyServicesPage() {
           </TabsContent>
 
           <TabsContent value="clinics">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
               {clinics.map((clinic) => (
                 <ServiceCard
                   key={clinic.id}
@@ -218,7 +220,7 @@ export default function NearbyServicesPage() {
           </TabsContent>
 
           <TabsContent value="pharmacies">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
               {pharmacies.map((pharmacy) => (
                 <ServiceCard
                   key={pharmacy.id}
@@ -252,24 +254,26 @@ function ServiceCard({
 }) {
   return (
     <Card className="hover:shadow-lg transition-shadow">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="text-lg leading-tight">{item.name}</CardTitle>
+      <CardHeader className="pb-2 sm:pb-3 p-4 sm:p-6">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <CardTitle className="text-base sm:text-lg leading-tight truncate">
+              {item.name}
+            </CardTitle>
             <div className="flex items-center gap-2 mt-1">
               {item.type === "clinic" ? (
-                <Building2 className="h-4 w-4 text-primary" />
+                <Building2 className="h-3 w-3 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
               ) : (
-                <Pill className="h-4 w-4 text-success" />
+                <Pill className="h-3 w-3 sm:h-4 sm:w-4 text-success flex-shrink-0" />
               )}
-              <span className="text-sm text-muted-foreground capitalize">
+              <span className="text-xs sm:text-sm text-muted-foreground capitalize">
                 {item.type}
               </span>
             </div>
           </div>
           <Badge
             variant={item.isOpen ? "default" : "secondary"}
-            className={`${
+            className={`flex-shrink-0 text-xs ${
               item.isOpen
                 ? "bg-success text-success-foreground hover:bg-success"
                 : "bg-destructive text-destructive-foreground hover:bg-destructive"
@@ -280,18 +284,20 @@ function ServiceCard({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
-        <div className="flex items-center gap-2">
-          <MapPin className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">{item.address}</span>
+      <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6 pt-0">
+        <div className="flex items-start gap-2">
+          <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+          <span className="text-xs sm:text-sm text-muted-foreground">
+            {item.address}
+          </span>
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-primary">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="text-xs sm:text-sm font-medium text-primary">
               {item.distance}
             </span>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-xs sm:text-sm text-muted-foreground">
               ★ {item.rating}
             </span>
           </div>
@@ -299,8 +305,9 @@ function ServiceCard({
             size="sm"
             variant="outline"
             onClick={() => onContact(item.phone, item.name)}
+            className="text-xs sm:text-sm"
           >
-            <Phone className="h-4 w-4 mr-2" />
+            <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             Call
           </Button>
         </div>

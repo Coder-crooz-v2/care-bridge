@@ -27,15 +27,17 @@ export const VitalChart: React.FC<VitalChartProps> = ({
 }) => {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+      <CardHeader className="p-4 sm:p-6">
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg md:text-xl">
           <div className={`w-3 h-3 ${color} rounded-full`}></div>
           {title}
         </CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription className="text-xs sm:text-sm">
+          {description}
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="h-64">
+      <CardContent className="p-4 sm:p-6">
+        <div className="h-48 sm:h-56 md:h-64">
           <Line data={data} options={options} />
         </div>
       </CardContent>

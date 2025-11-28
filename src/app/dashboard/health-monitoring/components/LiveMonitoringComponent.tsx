@@ -40,7 +40,7 @@ const LiveMonitoringComponent = () => {
   const [timeRange, setTimeRange] = useState<TimeRange>("60");
 
   // Use custom hooks for socket connection and data
-  const { vitalData, isConnected } = useSocketConnection();
+  const { vitalData, isConnected, isLoadingHistory } = useSocketConnection();
 
   // Filter data based on selected time range
   const filteredData = filterDataByTimeRange(vitalData, timeRange);
@@ -57,8 +57,20 @@ const LiveMonitoringComponent = () => {
   // Calculate statistics
   const statistics = useStatistics(filteredData);
 
+  // Show loading state while fetching historical data
+  if (isLoadingHistory) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 space-y-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary" />
+        <p className="text-muted-foreground">
+          Loading historical health data...
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6 mt-4">
+    <div className="space-y-4 sm:space-y-6 mt-2 sm:mt-4">
       {/* Time Range Filter and Connection Status */}
       <TimeRangeFilter
         timeRange={timeRange}
@@ -70,7 +82,7 @@ const LiveMonitoringComponent = () => {
       <CurrentValues statistics={statistics} />
 
       {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <VitalChart
           title="Heart Rate"
           description="Real-time heart rate monitoring (bpm)"

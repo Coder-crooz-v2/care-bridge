@@ -93,6 +93,16 @@ export const useChartConfig = (filteredData: VitalSigns[]) => {
         pointBorderWidth: 2,
       },
     ],
+    options: {
+      ...chartOptions,
+      scales: {
+        ...chartOptions.scales,
+        y: {
+          ...chartOptions.scales.y,
+          max: 140,
+        },
+      },
+    },
   };
 
   const spo2Data = {
@@ -195,6 +205,16 @@ export const useChartConfig = (filteredData: VitalSigns[]) => {
         pointBorderWidth: 2,
       },
     ],
+    options: {
+      ...chartOptions,
+      scales: {
+        ...chartOptions.scales,
+        y: {
+          ...chartOptions.scales.y,
+          max: 110,
+        },
+      },
+    },
   };
 
   return {

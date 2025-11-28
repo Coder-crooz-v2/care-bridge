@@ -54,8 +54,13 @@ export default function DashboardLayout({
             <AppSidebar />
           </Suspense>
           <SidebarInset className="bg-background flex flex-col relative">
+            <header className="flex md:hidden sticky top-0 z-10 w-full h-14 shrink-0 items-center gap-2 px-4 bg-background border-b">
+              <SidebarTrigger className="-ml-1" />
+              <Separator orientation="vertical" className="mr-2 h-4" />
+              <h2 className="text-lg font-semibold">CareBridge</h2>
+            </header>
             {isChatInterface && (
-              <header className="flex absolute w-full h-14 sm:h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 px-2 sm:px-4 bg-transparent backdrop-blur-sm">
+              <header className="hidden md:flex absolute w-full h-14 sm:h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 px-2 sm:px-4 bg-transparent backdrop-blur-sm">
                 <div className="flex items-center gap-2">
                   <SidebarTrigger className="-ml-1" />
                   <Separator
@@ -66,8 +71,7 @@ export default function DashboardLayout({
                     fallback={
                       <div className="h-4 w-32 bg-muted animate-pulse rounded" />
                     }
-                  >
-                  </Suspense>
+                  ></Suspense>
                 </div>
               </header>
             )}

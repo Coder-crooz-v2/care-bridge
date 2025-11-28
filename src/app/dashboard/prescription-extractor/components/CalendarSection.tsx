@@ -50,12 +50,20 @@ const CalendarSection = ({ selectedMedicine }: CalendarSectionProps) => {
           }}
         />
         {selectedMedicine && (
-          <div className="mt-3 text-sm text-gray-600">
-            <p className="font-medium">Reminder Schedule for {selectedMedicine.medicine}:</p>
-            <ul className="mt-1 space-y-1 flex gap-3">
-              {selectedMedicine.morning && <li>9:00 AM</li>}
-              {selectedMedicine.noon && <li>12:00 PM</li>}
-              {selectedMedicine.night && <li>8:00 PM</li>}
+          <div className="mt-2 sm:mt-3 text-xs sm:text-sm text-gray-600">
+            <p className="font-medium">
+              Reminder Schedule for {selectedMedicine.medicine}:
+            </p>
+            <ul className="mt-1 space-y-1 flex flex-wrap gap-2 sm:gap-3">
+              {selectedMedicine.morning && (
+                <li className="text-xs sm:text-sm">9:00 AM</li>
+              )}
+              {selectedMedicine.noon && (
+                <li className="text-xs sm:text-sm">12:00 PM</li>
+              )}
+              {selectedMedicine.night && (
+                <li className="text-xs sm:text-sm">8:00 PM</li>
+              )}
             </ul>
           </div>
         )}

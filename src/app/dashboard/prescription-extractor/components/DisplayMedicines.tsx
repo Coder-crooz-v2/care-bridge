@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import MedicineCard from "./MedicineCard";
 import CalendarSection from "./CalendarSection";
 import Disclaimer from "./Disclaimer";
+import AddMedicineDialog from "./AddMedicineDialog";
 import { Medicine } from "@/types/prescription";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
@@ -115,9 +116,9 @@ const DisplayMedicines = () => {
   return (
     <div className="w-full h-full max-h-[calc(100vh-8rem)] p-3 sm:p-4 md:p-6 flex flex-col overflow-hidden">
       {/* Prescription Title */}
-      <div className="mb-3 sm:mb-4 flex items-center justify-between flex-shrink-0">
+      <div className="mb-3 sm:mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 flex-shrink-0">
         {isEditingTitle ? (
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 flex-1">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 flex-1 w-full">
             <Input
               value={editedTitle}
               onChange={(e) => setEditedTitle(e.target.value)}
@@ -142,17 +143,28 @@ const DisplayMedicines = () => {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 flex-1">
-            <h1 className="text-lg sm:text-xl md:text-2xl font-bold">
-              {prescriptionTitle}
-            </h1>
-            <Button
-              onClick={() => setIsEditingTitle(true)}
-              className="text-sm sm:text-base"
-            >
-              Edit
-            </Button>
-          </div>
+          <>
+            <div className="flex items-center gap-2 sm:gap-4 flex-1">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-bold">
+                {prescriptionTitle}
+              </h1>
+              <Button
+                onClick={() => setIsEditingTitle(true)}
+                variant="outline"
+                className="text-sm sm:text-base"
+              >
+                Edit
+              </Button>
+            </div>
+            <AddMedicineDialog
+              prescriptionId={currentPrescriptionId}
+              onMedicineAdded={() => {
+                if (currentPrescriptionId) {
+                  fetchMedicines(currentPrescriptionId);
+                }
+              }}
+            />
+          </>
         )}
       </div>
 

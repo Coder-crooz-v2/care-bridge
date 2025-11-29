@@ -39,8 +39,10 @@ const FileUploader = ({
           "Content-Type": "multipart/form-data",
         },
       });
-      const { medicines } = response.data;
-      setMedicines(medicines);
+      const { medicines: parsedMedicines } = response.data;
+      console.log("Parsed medicines:", parsedMedicines);
+      setMedicines(parsedMedicines);
+      return parsedMedicines; // Return the medicines
     } catch (error) {
       console.error("Error uploading prescription:", error);
       toast.error("Prescription parsing failed", {
@@ -54,7 +56,7 @@ const FileUploader = ({
     }
   };
 
-  const uploadPrescription = async (file: File) => {
+  const uploadPrescription = async (file: File, parsedMedicines: any[]) => {
     if (!user) {
       toast.error("You must be logged in to upload a prescription.");
       return;
@@ -84,9 +86,10 @@ const FileUploader = ({
         },
       ]);
 
-      // Auto-save medicines to database
-      await saveMedicinesToDatabase(prescriptionId, user.id);
+      // Auto-save medicines to database and wait for completion
+      await saveMedicinesToDatabase(prescriptionId, user.id, parsedMedicines);
 
+      // Navigate after medicines are saved
       router.push(
         `/dashboard/prescription-extractor?id=${prescriptionId}&from=new_upload`
       );
@@ -105,10 +108,18 @@ const FileUploader = ({
 
   const saveMedicinesToDatabase = async (
     prescriptionId: string,
-    userId: string
+    userId: string,
+    medicinesToSave: any[]
   ) => {
     try {
-      const savePromises = medicines.map((medicine) =>
+      if (!medicinesToSave || medicinesToSave.length === 0) {
+        console.log("No medicines to save");
+        return;
+      }
+
+      console.log("Saving medicines to database:", medicinesToSave);
+
+      const savePromises = medicinesToSave.map((medicine) =>
         axios.post("/api/medicines", {
           user_id: userId,
           prescription_id: prescriptionId,
@@ -124,27 +135,25 @@ const FileUploader = ({
       );
 
       const results = await Promise.all(savePromises);
-
-      // Update medicines with returned IDs from database
-      const savedMedicines = results.map((res) => res.data[0]);
-      setMedicines(savedMedicines);
+      console.log("Medicines saved successfully:", results);
 
       toast.success("Medicines saved successfully", {
-        description: `${medicines.length} medicine(s) saved to database`,
+        description: `${medicinesToSave.length} medicine(s) saved to database`,
       });
     } catch (error) {
       console.error("Error saving medicines:", error);
       toast.error("Failed to save some medicines", {
         description: "Please check and save them manually",
       });
+      throw error; // Re-throw to stop the upload process
     }
   };
 
   const handleProcessing = async (file: File) => {
     setCurrentState("loading");
     try {
-      await parsePrescription(file);
-      await uploadPrescription(file);
+      const parsedMedicines = await parsePrescription(file);
+      await uploadPrescription(file, parsedMedicines);
       setCurrentState("processed");
     } catch (error) {
       console.error("Error processing prescription:", error);

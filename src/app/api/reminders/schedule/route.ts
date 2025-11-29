@@ -1,6 +1,10 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { sendReminderEmail } from "@/lib/resend-service";
+import {
+  createMedicineCalendarEvents,
+  isCalendarConnected,
+} from "@/controllers/googleCalendarController";
 
 // Helper function to calculate scheduled times
 function getScheduledTimes(
@@ -136,6 +140,38 @@ export async function POST(request: NextRequest) {
     } catch (emailError) {
       // Don't fail the whole request if confirmation email fails
       console.error("Failed to send confirmation email:", emailError);
+    }
+
+    // Optional: Create Google Calendar events if connected
+    try {
+      const calendarConnected = await isCalendarConnected(user_id);
+      if (calendarConnected) {
+        const calendarResult = await createMedicineCalendarEvents({
+          medicineId: medicine_id,
+          userId: user_id,
+          medicineName: medicine.medicine,
+          dosage: medicine.dosage || "As prescribed",
+          instructions: medicine.instructions || "Follow doctor's instructions",
+          duration: parseInt(duration.toString()),
+          morning,
+          noon,
+          night,
+        });
+
+        if (!calendarResult.success) {
+          console.error(
+            "Failed to create calendar events:",
+            calendarResult.error
+          );
+        } else {
+          console.log(
+            `Created ${calendarResult.eventsCreated} Google Calendar events`
+          );
+        }
+      }
+    } catch (calendarError) {
+      // Don't fail the whole request if calendar creation fails
+      console.error("Failed to create calendar events:", calendarError);
     }
 
     return NextResponse.json({

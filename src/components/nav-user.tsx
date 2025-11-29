@@ -7,6 +7,9 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
+  Calendar,
+  CalendarCheck,
+  Loader2,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -27,6 +30,13 @@ import {
 } from "@/components/ui/sidebar";
 import { logout } from "@/app/auth/actions";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import {
+  checkCalendarConnection,
+  connectCalendar,
+  disconnectCalendar,
+} from "@/lib/calendar-service";
+import { toast } from "sonner";
 
 export function NavUser({
   user,
@@ -39,6 +49,65 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar();
   const router = useRouter();
+  const [isCalendarConnected, setIsCalendarConnected] = useState(false);
+  const [isCheckingCalendar, setIsCheckingCalendar] = useState(true);
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  // Check calendar connection status on mount
+  useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        const status = await checkCalendarConnection();
+        setIsCalendarConnected(status.connected);
+      } catch (error) {
+        console.error("Error checking calendar status:", error);
+      } finally {
+        setIsCheckingCalendar(false);
+      }
+    };
+
+    checkStatus();
+  }, []);
+
+  const handleCalendarConnect = async () => {
+    try {
+      setIsConnecting(true);
+      await connectCalendar();
+    } catch (error) {
+      toast.error("Connection Failed", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to connect Google Calendar",
+      });
+      setIsConnecting(false);
+    }
+  };
+
+  const handleCalendarDisconnect = async () => {
+    try {
+      setIsConnecting(true);
+      const result = await disconnectCalendar();
+      if (result.success) {
+        setIsCalendarConnected(false);
+        toast.success("Calendar Disconnected", {
+          description:
+            "Your Google Calendar has been disconnected successfully",
+        });
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      toast.error("Disconnection Failed", {
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to disconnect Google Calendar",
+      });
+    } finally {
+      setIsConnecting(false);
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -88,6 +157,41 @@ export function NavUser({
                 <Bell />
                 Notifications
               </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              {isCheckingCalendar ? (
+                <DropdownMenuItem disabled>
+                  <Loader2 className="animate-spin" />
+                  Checking calendar...
+                </DropdownMenuItem>
+              ) : isCalendarConnected ? (
+                <DropdownMenuItem
+                  onClick={handleCalendarDisconnect}
+                  disabled={isConnecting}
+                >
+                  {isConnecting ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    <CalendarCheck />
+                  )}
+                  {isConnecting
+                    ? "Disconnecting..."
+                    : "Disconnect Google Calendar"}
+                </DropdownMenuItem>
+              ) : (
+                <DropdownMenuItem
+                  onClick={handleCalendarConnect}
+                  disabled={isConnecting}
+                >
+                  {isConnecting ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    <Calendar />
+                  )}
+                  {isConnecting ? "Connecting..." : "Connect Google Calendar"}
+                </DropdownMenuItem>
+              )}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem

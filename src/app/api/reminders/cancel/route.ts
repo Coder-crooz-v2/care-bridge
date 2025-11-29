@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { deleteMedicineCalendarEvents } from "@/controllers/googleCalendarController";
 
 export async function DELETE(request: NextRequest) {
   const supabase = await createClient();
@@ -13,6 +14,24 @@ export async function DELETE(request: NextRequest) {
         { error: "Medicine ID is required" },
         { status: 400 }
       );
+    }
+
+    // Get current user
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Optional: Delete Google Calendar events if they exist
+    try {
+      await deleteMedicineCalendarEvents(medicine_id, user.id);
+      console.log("Calendar events deleted successfully");
+    } catch (calendarError) {
+      // Don't fail the whole request if calendar deletion fails
+      console.error("Failed to delete calendar events:", calendarError);
     }
 
     // Deactivate reminders instead of deleting them (for audit trail)
